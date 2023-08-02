@@ -1,0 +1,38 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block head_title %}{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    {% block extra_head %}
+    {% endblock %}
+  </head>
+  <body>
+    {% block body %}
+        <div>
+          <ul>
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'account_email' %}">{% trans "Change E-mail" %}</a></li>
+            <li><a href="{% url 'account_logout' %}">{% trans "Sign Out" %}</a></li>
+          </ul>
+            {% else %}
+            <div class="container d-flex align-items-center justify-content-center flex-column" style="width: 100%; height: 850px;">
+                    <div class="container d-flex align-items-center justify-content-center flex-row">
+                        <a href="{% url 'account_login' %}" class="btn btn-primary m-2 p-2">{% trans "Sign In" %}</a>
+                        <a href="{% url 'account_signup' %}" class="btn btn-primary m-2 p-2">{% trans "Sign Up" %}</a>
+                    </div>
+                    <div class="container d-flex align-items-center justify-content-center flex-column mt-5">
+                        <form method="post">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-lg btn-block btn-primary" style="background-color: #dd4b39;"><i class="fab fa-google me-2"></i> {% trans "Sign in with Google" %}</button>
+                        </form>
+                    </div>
+            </div>
+            {% endif %}
+        </div>
+    {% endblock %}
+  </body>
+</html>
