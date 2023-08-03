@@ -2,17 +2,14 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+class Categorie(models.Model):
+    name = models.CharField(max_length=155, default="")
+
+    def __str__(self):
+        return f"{self.name}"
+
+
 class Post(models.Model):
-    CATEGORY_CHOICES = [
-        ("Piano", "Piano"),
-        ("Guitar", "Guitar"),
-        ("Bass", "Bass"),
-        ("Drums", "Drums"),
-        ("Violin", "Violin"),
-        ("Flute", "Flute"),
-        ("Saxophone", "Saxophone"),
-        ("Other", "Other"),
-    ]
 
     POSSIBILITY_OF_EXCHANGE_CHOICES = [
         ("Yes", "Yes"),
@@ -25,7 +22,7 @@ class Post(models.Model):
     brand = models.CharField(max_length=100)
     item_model = models.CharField(max_length=100)
     date_of_manufacture = models.DateField()
-    category = models.CharField(choices=CATEGORY_CHOICES)
+    category = models.ForeignKey(Categorie, on_delete=models.CASCADE, related_name="category")
     price = models.IntegerField()
     possibility_of_exchange = models.CharField(choices=POSSIBILITY_OF_EXCHANGE_CHOICES)
     description = models.TextField()
