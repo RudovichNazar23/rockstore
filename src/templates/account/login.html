@@ -17,16 +17,7 @@
     <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
     <form class="login" method="POST" action="{% url 'account_login' %}">
       {% csrf_token %}
-        <ul class="wrapper">
-           {% for field in form %}
-                <li class="form-row">
-                    <label>{{ field.label_tag }}</label>
-                    {{ field }}
-                    <p>{{ field.errors }}</p>
-                </li>
-           {% endfor %}
-       </ul>
-      <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+        {{ form.as_p }}
         <hr>
         <center><button class="primaryAction btn btn-primary" type="submit">{% trans "Sign In" %}</button></center>
     </form>
