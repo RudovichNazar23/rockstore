@@ -6,6 +6,7 @@
 
 {% block auth_user_content %}
         <h3 class="text-center m-2"> Hello, you are signed as {{ request.user.username }}</h3>
+        <hr>
         <div class="d-flex flex-row">
             <div class="container d-flex align-items-center align-content-between flex-column bg-light border border-top-0" style="height: 950px; width: 400px;">
                 {% for category in categories %}
@@ -22,9 +23,9 @@
                             Card1 title
                         </h5>
                         <p class="card-text">
-                            Card1 text
+                            <a href="">Owner link</a>
                         </p>
-                        <a class="btn btn-primary rounded">Link</a>
+                        <a class="btn btn-primary rounded">Check</a>
                     </div>
                 </div>
                 <div class="card m-2" style="width: 450px;">
@@ -34,9 +35,9 @@
                             Card2 title
                         </h5>
                         <p class="card-text">
-                            Card2 text
+                            <a href="">Owner link</a>
                         </p>
-                        <a class="btn btn-primary rounded">Link</a>
+                        <a class="btn btn-primary rounded">Check</a>
                     </div>
                 </div>
 
@@ -47,9 +48,9 @@
                             Card3 title
                         </h5>
                         <p class="card-text">
-                            Card3 text
+                            <a href="">Owner link</a>
                         </p>
-                        <a class="btn btn-primary rounded">Link</a>
+                        <a class="btn btn-primary rounded">Check</a>
                     </div>
                 </div>
             </div>
