@@ -9,3 +9,7 @@ def get_object_data(model, **kwargs):
     except Exception as error:
         return None
 
+
+def create_object(model, **kwargs):
+    return model.objects.create(**kwargs)
+
