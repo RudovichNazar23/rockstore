@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import View, UpdateView
+from django.contrib.auth.models import User
 
 from .models import UserProfile
 from .forms import UserProfileForm
@@ -13,6 +14,22 @@ def my_profile_view(request):
     user_profile_data = get_object_data(model=UserProfile, user=request.user)
     return render(request, "user_profile_app/my_profile.html", {
         "user_profile_info": user_profile_data,
+    })
+
+
+@login_required
+def user_profile_view(request, id: int):
+    user = get_object_data(model=User, id=id)
+    profile = get_object_data(model=UserProfile, user=user)
+
+    if request.user == user:
+        return my_profile_view(request)
+    elif user is None:
+        return redirect("../common/page_404")
+
+    return render(request, "user_profile_app/user_profile.html", {
+        "user": user,
+        "profile": profile
     })
 
 

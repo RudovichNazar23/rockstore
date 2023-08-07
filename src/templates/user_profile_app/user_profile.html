@@ -1,0 +1,49 @@
+{% extends 'templates/profile.html' %}
+
+{% block title %}
+    {{ user.username }}
+{% endblock %}
+
+{% block profile_photo %}
+    {% if not profile.profile_photo %}
+        <div class=" d-flex align-items-center justify-content-center flex-column" style="width: 100%; height: 300px;">
+            <img src="data:image/jpeg;base64,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"  class="rounded mt-4" width="200" height="200">
+        </div>
+    {% else %}
+        <img src="{{ profile.profile_photo.url }}" width="95%" class="rounded">
+    {% endif %}
+{% endblock %}
+
+{% block username %}
+    {{ user.username }}
+{% endblock %}
+
+{% block email %}
+    {% if not user.email %}
+        No information
+    {% else %}
+        {{ user.email }}
+    {% endif %}
+{% endblock %}
+
+{% block country %}
+    {% if not profile.country %}
+        No information
+    {% else %}
+        {{ profile.country }}
+    {% endif %}
+{% endblock %}
+
+{% block customize_profile %}
+    <a href="">
+        Write a message
+    </a>
+{% endblock %}
+
+{% block about %}
+    {% if not profile.about %}
+        {{ user.username }} didn't write anything about itself
+    {% else %}
+        {{ profile.about }}
+    {% endif %}
+{% endblock %}
