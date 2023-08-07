@@ -1,127 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="/">Home</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-mdb-toggle="collapse"
-          data-mdb-target="#navbarText"
-          aria-controls="navbarText"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <i class="fas fa-bars"></i>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarText">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Posts</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Reposts</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Comments</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+{% extends 'templates/profile.html' %}
 
-    <div class="container m-auto">
-    <div class="main-body mt-5">
-          <div class="row gutters-sm">
-            <div class="col-md-4 mb-3">
-              <div class="" style="height: 300px;">
-                <div class="card-body">
-                  <div class="d-flex flex-column align-items-center text-center">
-                      {% if not user_profile_info %}
-                            <div class=" d-flex align-items-center justify-content-center flex-column" style="width: 100%; height: 300px;">
-                                <img src="data:image/jpeg;base64,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"  class="rounded mt-4" width="200" height="200">
-                            </div>
-                      {% else %}
-                            {% if user_profile_info.profile_photo %}
-                                <img src="{{ user_profile_info.profile_photo.url }}" width="95%" class="rounded">
-                            {% else %}
-                                <div class=" d-flex align-items-center justify-content-center flex-column" style="width: 100%; height: 300px;">
-                                    <img src="data:image/jpeg;base64,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"  class="rounded mt-4" width="200" height="200">
-                                    <a href="../update_profile/{{ user_profile_info.id }}" class="btn btn-info m-auto"> Add photo</a>
-                                </div>
-                            {% endif %}
-                      {% endif %}
-                  </div>
-                </div>
-              </div>
+{% block title  %}
+    {{ request.user.username }}
+{% endblock %}
+
+{% block profile_photo %}
+      {% if not user_profile_info %}
+            <div class=" d-flex align-items-center justify-content-center flex-column" style="width: 100%; height: 300px;">
+                <img src="data:image/jpeg;base64,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"  class="rounded mt-4" width="200" height="200">
             </div>
-            <div class="col-md-8">
-              <div class="card mb-3" style="height: 300px;">
-                <div class="card-body mt-5">
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <h6 class="mb-0">Username</h6>
-                    </div>
-                    <div class="col-sm-9 text-secondary">
-                      {{ request.user.username }}
-                    </div>
-                  </div>
-                  <hr>
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <h6 class="mb-0">Email</h6>
-                    </div>
-                    <div class="col-sm-9 text-secondary">
-                        {% if not request.user.email %}
-                            No information
-                        {% else %}
-                            {{ request.user.email }}
-                        {% endif %}
-                    </div>
-                  </div>
-                  <hr>
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <h6 class="mb-0">Country</h6>
-                    </div>
-                    <div class="col-sm-9 text-secondary">
-                        {% if not user_profile_info.country %}
-                            No information
-                        {% else %}
-                            {{ user_profile_info.country }}
-                        {% endif %}
-                    </div>
-                  </div>
-                  <hr>
-                  <div class="row">
-                    <div class="col-sm-12">
-                        {% if not user_profile_info %}
-                            <a class="btn btn-info " href="../create_profile/">Create profile</a>
-                        {% else %}
-                            <a class="btn btn-info " href="../update_profile/{{ user_profile_info.pk }}">Edit</a>
-                        {% endif %}
-                    </div>
-                  </div>
+      {% else %}
+            {% if user_profile_info.profile_photo %}
+                <img src="{{ user_profile_info.profile_photo.url }}" width="95%" class="rounded">
+            {% else %}
+                <div class=" d-flex align-items-center justify-content-center flex-column" style="width: 100%; height: 300px;">
+                    <img src="data:image/jpeg;base64,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"  class="rounded mt-4" width="200" height="200">
+                    <a href="../update_profile/{{ user_profile_info.id }}" class="btn btn-info m-auto"> Add photo</a>
                 </div>
-              </div>
-          </div>
-        </div>
-    </div>
-    <div class="container card" style="height: 250px;">
-        <h3 class="text-center p-3">About</h3>
-        <hr>
-        {% if not user_profile_info.about %}
-            You didn't write anything about yourself
-        {% else %}
-            {{ user_profile_info.about }}
+            {% endif %}
+      {% endif %}
+{% endblock %}
+
+{% block username %}
+    {{ request.user.username }}
+{% endblock %}
+
+{% block email %}
+    {% if not request.user.email %}
+        No information
+    {% else %}
+        {{ request.user.email }}
+    {% endif %}
+{% endblock %}
+
+{% block country %}
+    {% if not user_profile_info.country %}
+        No information
+    {% else %}
+        {{ user_profile_info.country }}
+    {% endif %}
+{% endblock %}
+
+{% block customize_profile %}
+    {% if not user_profile_info %}
+        <a class="btn btn-info " href="../create_profile/">Create profile</a>
+    {% else %}
+        <a class="btn btn-info " href="../update_profile/{{ user_profile_info.pk }}">Edit</a>
+    {% endif %}
+{% endblock %}
+
+{% block about %}
+    {% if not user_profile_info.about %}
+        You didn't write anything about yourself
+    {% else %}
+        {{ user_profile_info.about }}
         {% endif %}
-    </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-</body>
-</html>
+{% endblock %}
