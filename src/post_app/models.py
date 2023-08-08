@@ -29,6 +29,9 @@ class Post(models.Model):
     rating = models.IntegerField(default=0)
     date_created = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return f"{self.user} - {self.title}"
+
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # the person who leaves the comment
