@@ -1,10 +1,10 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from django.views.generic.edit import CreateView, View
+from django.views.generic.edit import View
 
 from .forms import CreatePostForm
 from .models import Post
-from common.services import create_object
+from common.services import create_object, get_queryset
 
 
 class CreatePostView(View):
@@ -25,3 +25,10 @@ class CreatePostView(View):
             return redirect("../create_post/")
 
 
+class MyPostsView(View):
+    model = Post
+    template_name = "post_app/my_posts.html"
+
+    def get(self, request):
+        posts = get_queryset(self.model, user=request.user)
+        return render(request, self.template_name, {"posts": posts})

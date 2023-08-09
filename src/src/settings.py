@@ -32,6 +32,7 @@ SITE_ID = 2
 
 INSTALLED_APPS = [
     "daphne",
+    "widget_tweaks",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
