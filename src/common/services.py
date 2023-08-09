@@ -10,6 +10,10 @@ def get_object_data(model, **kwargs):
         return None
 
 
+def get_queryset(model, **kwargs):
+    return model.objects.filter(**kwargs)
+
+
 def create_object(model, **kwargs):
     return model.objects.create(**kwargs)
 

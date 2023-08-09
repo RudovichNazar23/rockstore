@@ -1,5 +1,7 @@
 {% extends 'templates/profile_form.html' %}
 
+{% load widget_tweaks %}
+
 {% block content %}
     {% if user_profile or not request.user.is_authenticated %}
         <a href="/">Your cannot create a profile !!!</a>
@@ -10,7 +12,7 @@
                {% for field in form %}
                     <li class="form-row">
                         <label>{{ field.label_tag }}</label>
-                        <p>{{ field }}</p>
+                        {% render_field field class+="form-control" %}
                         <p>{{ field.errors }}</p>
                     </li>
                {% endfor %}
