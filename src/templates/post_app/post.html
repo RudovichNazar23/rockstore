@@ -1,0 +1,46 @@
+{% extends 'templates/base.html' %}
+
+
+{% block auth_user_content %}
+    <div class="container m-auto mt-4 p-4 text-center rounded" style="background-color: whitesmoke;">
+        <h2>{{ post.title }}</h2>
+    </div>
+    <div class="container mt-4 d-flex flex-row align-items-center justify-content-center">
+      <img src="{{ post.item_photo.url }}" width="350" height="350" class="rounded">
+      <div class="container d-flex flex-column ms-3 border rounded" style="width: 100%; height: 350px;;">
+          <h2 class="text-center p-2">Description</h2>
+          <hr>
+          <p>
+            {{ post.description }}
+          </p>
+      </div>
+    </div>
+    <div class="container mt-5 rounded p-2" style="background-color: whitesmoke;">
+        <h2 class="text-center">More info</h2>
+        <hr>
+        <p>
+            Brand - {{ post.brand }}
+          </p>
+          <p>
+            Model - {{ post.item_model }}
+          </p>
+          <p>
+            Date of manufacture - {{ post.date_of_manufacture }}
+          </p>
+          <p>
+            Category - {{ post.category }}
+          </p>
+          <p>
+            Possibility of exchange - {{ post.possibility_of_exchange }}
+          </p>
+          <p>
+            Price - {{ post.price }}$
+          </p>
+          <p style="text-decoration: underline;">
+              Active - {{ post.active }}
+          </p>
+    </div>
+    <footer class="container d-flex mt-2 text-center align-items-center justify-content-center" style="height: 70px; font-size: 25px;">
+      Owner - <a href="../../../user_profile/{{ post.user.pk }}">{{ post.user }}<a>
+    </footer>
+{% endblock %}

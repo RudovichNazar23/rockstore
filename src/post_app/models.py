@@ -11,7 +11,7 @@ class Categorie(models.Model):
 
 class Post(models.Model):
 
-    POSSIBILITY_OF_EXCHANGE_CHOICES = [
+    CHOICES = [
         ("Yes", "Yes"),
         ("No", "No"),
     ]
@@ -24,9 +24,9 @@ class Post(models.Model):
     date_of_manufacture = models.DateField()
     category = models.ForeignKey(Categorie, on_delete=models.CASCADE, related_name="category")
     price = models.IntegerField()
-    possibility_of_exchange = models.CharField(choices=POSSIBILITY_OF_EXCHANGE_CHOICES)
+    possibility_of_exchange = models.CharField(choices=CHOICES)
     description = models.TextField()
-    rating = models.IntegerField(default=0)
+    active = models.CharField(choices=CHOICES, default="Yes")
     date_created = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -34,8 +34,8 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)  # the person who leaves the comment
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)  # under what post
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
     description = models.TextField()
 
 

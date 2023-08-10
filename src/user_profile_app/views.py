@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from .models import UserProfile
 from .forms import UserProfileForm
 
-from common.services import get_object_data, create_object
+from common.services import get_object_data, create_object, check_object_is_none
 
 
 @login_required
@@ -24,13 +24,13 @@ def user_profile_view(request, id: int):
 
     if request.user == user:
         return my_profile_view(request)
-    elif user is None:
+    elif check_object_is_none(user):
         return redirect("../common/page_404")
-
-    return render(request, "user_profile_app/user_profile.html", {
-        "user": user,
-        "profile": profile
-    })
+    else:
+        return render(request, "user_profile_app/user_profile.html", {
+            "user": user,
+            "profile": profile
+        })
 
 
 class CreateProfileView(View):
