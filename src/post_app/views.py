@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from django.views.generic.edit import View
+from django.views.generic.edit import View, UpdateView, DeleteView
 
 from .forms import CreatePostForm
 from .models import Post
@@ -19,7 +19,7 @@ class CreatePostView(View):
 
         if form.is_valid():
             create_object(model=Post, user=request.user, **form.cleaned_data)
-            return redirect("../create_post/")
+            return redirect("../my_posts/")
         else:
             messages.error(request, message="Something goes wrong...")
             return redirect("../create_post/")
@@ -45,3 +45,29 @@ class PostView(View):
         if check_object_is_none(obj=post):
             return redirect("../../../common/page_404")
         return render(request, template_name=self.template_name, context={"post": post})
+
+
+class UpdatePostView(UpdateView):
+    model = Post
+    fields = [
+        "title",
+        "item_photo",
+        "brand",
+        "item_model",
+        "date_of_manufacture",
+        "category",
+        "price",
+        "possibility_of_exchange",
+        "description",
+        "active"
+    ]
+    template_name = "post_app/update_post.html"
+    context_object_name = "post"
+    success_url = "../my_posts"
+
+
+class DeletePostView(DeleteView):
+    model = Post
+    context_object_name = "post"
+    success_url = "../my_posts"
+    template_name = "post_app/delete_post.html"
