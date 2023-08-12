@@ -1,0 +1,17 @@
+{% extends 'templates/base.html' %}
+
+{% block auth_user_content %}
+    <div class="center d-flex flex-column align-items-center justify-content-center p-5 mt-5">
+        <form method="post" class="card">
+            {% csrf_token %}
+            <h2 class="p-3 text-center">{% block form_title %}{% endblock %}</h2>
+            <p class="p-3">{% block form_content %}{% endblock %}</p>
+            <p class="form-buttons p-3 text-center">
+                <input type="submit" class="btn btn-danger" value="Delete">
+                {% block cancel_link %}
+                {% endblock %}
+            </p>
+        </form>
+    </div>
+{% endblock %}
+

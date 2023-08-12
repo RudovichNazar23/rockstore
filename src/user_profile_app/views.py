@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.views.generic.edit import View, UpdateView
+from django.views.generic.edit import View, UpdateView, DeleteView
 from django.contrib.auth.models import User
 
 from .models import UserProfile
@@ -62,3 +62,9 @@ class UpdateProfileView(UpdateView):
     success_url = "../my_profile"
     context_object_name = "user"
 
+
+class DeleteProfileView(DeleteView):
+    model = UserProfile
+    template_name = "user_profile_app/delete_profile.html"
+    context_object_name = "profile"
+    success_url = "../../my_profile"
