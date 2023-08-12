@@ -1,12 +1,6 @@
 {% extends 'templates/base.html' %}
 
 {% block auth_user_content %}
-    {% for message in messages %}
-        <div class="container text-center mt-3" style="color: red;">
-            {{ message }}
-        </div>
-    {% endfor %}
-
     <div class="container d-flex align-items-center justify-content-center mt-4 p-2 rounded" style="background-color: whitesmoke;">
         <form action="../create_post/" method="post" enctype="multipart/form-data" class="">{% csrf_token %}
             {{ form }}

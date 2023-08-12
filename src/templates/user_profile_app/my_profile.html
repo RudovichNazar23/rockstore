@@ -49,7 +49,10 @@
     {% if not user_profile_info %}
         <a class="btn btn-info " href="../create_profile/">Create profile</a>
     {% else %}
-        <a class="btn btn-info " href="../update_profile/{{ user_profile_info.pk }}">Edit</a>
+        <div class="d-flex flex-row align-items-center justify-content-start">
+            <a class="btn btn-info ms-2" href="../update_profile/{{ user_profile_info.pk }}">Edit</a>
+            <a class="btn btn-danger ms-2" href="../delete_profile/{{ user_profile_info.pk }}/">Delete</a>
+        </div>
     {% endif %}
 {% endblock %}
 
