@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.views.generic.edit import View, UpdateView, DeleteView
 
 from .forms import CreatePostForm
-from .models import Post
+from .models import Post, Categorie
 from common.services import create_object, get_queryset, get_object_data, check_is_anonymous_user, check_object_is_none
 
 
@@ -71,3 +71,16 @@ class DeletePostView(DeleteView):
     context_object_name = "post"
     success_url = "../my_posts"
     template_name = "post_app/delete_post.html"
+
+
+class CategoryPostListView(View):
+    template_name = "post_app/posts_by_category.html"
+
+    def get(self, request, category: str):
+        category = get_object_data(model=Categorie, name=category)
+
+        if check_object_is_none(obj=category):
+            return redirect("../../../common/page_404")
+        else:
+            posts = get_queryset(model=Post, category__name=category)
+            return render(request, template_name=self.template_name, context={"posts": posts})

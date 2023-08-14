@@ -11,7 +11,7 @@
             <div class="container d-flex align-items-center align-content-between flex-column bg-light border border-top-0" style="height: 950px; width: 400px;">
                 {% for category in categories %}
                     <div class="container text-center rounded p-2 m-2" id="cards" style="width: 200px;">
-                        <a class="btn btn-primary m-2 p-2" style="width: 100%;">{{ category.name }}</a>
+                        <a class="btn btn-primary m-2 p-2" style="width: 100%;" href="posts/category/{{ category.name }}">{{ category.name }}</a>
                     </div>
                 {% endfor %}
             </div>

@@ -1,0 +1,27 @@
+{% extends 'templates/base.html' %}
+
+{% block auth_user_content %}
+    {% if not posts %}
+        <h2 class="text-center mt-5">
+            There aren't any posts with this category...
+        </h2>
+    {% else %}
+        <div class="container d-flex flex-row align-items-start bg-light border border-top-0" style="height: 950px">
+            {% for post in posts %}
+                <div class="card m-2" style="width: 450px;">
+                    <img class="card-img-top rounded" src="{{ post.item_photo.url }}" width="350" height="350">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            {{ post.title }}
+                        </h5>
+                        <p class="card-text">
+                            <a href="../../../user_profile/{{ post.user.pk }}">{{ post.user.username }}</a>
+                        </p>
+                        <a class="btn btn-primary rounded" href="../../post/{{ post.pk }}">Check</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
+
