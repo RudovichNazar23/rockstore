@@ -18,6 +18,9 @@
                             <a href="../../../user_profile/{{ post.user.pk }}">{{ post.user.username }}</a>
                         </p>
                         <a class="btn btn-primary rounded" href="../../post/{{ post.pk }}">Check</a>
+                        <a class="btn btn-light" href="../../create_comment/{{ post.id }}">Leave a Comment</a>
+                        <a class="btn btn-light" href="">Repost</a>
+                        <a class="btn btn-light" href="../../post/comments/{{ post.id }}">Comments</a>
                     </div>
                 </div>
             {% endfor %}

@@ -23,7 +23,7 @@ def user_profile_view(request, id: int):
     profile = get_object_data(model=UserProfile, user=user)
 
     if request.user == user:
-        return my_profile_view(request)
+        return redirect("my_profile/")
     elif check_object_is_none(user):
         return redirect("../common/page_404")
     else:

@@ -37,6 +37,13 @@ class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     description = models.TextField()
+    date_created = models.DateField(auto_now=True)
+
+    class Meta:
+        ordering = ("date_created", )
+
+    def __str__(self):
+        return f"{self.user} - {self.post.title}"
 
 
 class Like(models.Model):

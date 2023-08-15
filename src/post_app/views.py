@@ -2,8 +2,8 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.views.generic.edit import View, UpdateView, DeleteView
 
-from .forms import CreatePostForm
-from .models import Post, Categorie
+from .forms import CreatePostForm, CreateCommentForm
+from .models import Post, Categorie, Comment
 from common.services import create_object, get_queryset, get_object_data, check_is_anonymous_user, check_object_is_none
 
 
@@ -84,3 +84,54 @@ class CategoryPostListView(View):
         else:
             posts = get_queryset(model=Post, category__name=category)
             return render(request, template_name=self.template_name, context={"posts": posts})
+
+
+class CreateCommentView(View):
+    template_name = "post_app/create_comment.html"
+
+    def get(self, request, id: int):
+        post = self.__get_post_by_id(post_id=id)
+        form = CreateCommentForm()
+        return render(request=request, template_name=self.template_name, context={
+            "post": post,
+            "form": form,
+        })
+
+    def post(self, request, id: int):
+        form = CreateCommentForm(request.POST)
+        post = self.__get_post_by_id(post_id=id)
+
+        if form.is_valid():
+            create_object(model=Comment, user=request.user, post=post, **form.cleaned_data)
+            return redirect(f"../../post/comments/{post.id}")
+
+    @staticmethod
+    def __get_post_by_id(post_id: int):
+        post = get_object_data(model=Post, id=post_id)
+        if post is None:
+            return redirect("../../common/page_404")
+        else:
+            return post
+
+
+class PostCommentsView(View):
+    template_name = "post_app/post_comments.html"
+
+    def get(self, request, id: int):
+        post_comments = get_queryset(model=Comment, post=id)
+        return render(request=request, template_name=self.template_name, context={"post_comments": post_comments})
+
+
+class UpdateCommentView(UpdateView):
+    model = Comment
+    template_name = "post_app/update_comment.html"
+    fields = ["description"]
+    context_object_name = "comment"
+    success_url = "/"
+
+
+class DeleteCommentView(DeleteView):
+    model = Comment
+    context_object_name = "comment"
+    template_name = "post_app/delete_comment.html"
+    success_url = "/"
