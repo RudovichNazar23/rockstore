@@ -2,7 +2,7 @@ from django import forms
 
 from django.forms import SelectDateWidget
 
-from .models import Post
+from .models import Post, Comment
 
 
 class CreatePostForm(forms.ModelForm):
@@ -30,3 +30,9 @@ class CreatePostForm(forms.ModelForm):
     def __update_field_widget(self):
         for field in self.fields:
             self.fields[field].widget.attrs.update({"class": "form-control"})
+
+
+class CreateCommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ["description"]

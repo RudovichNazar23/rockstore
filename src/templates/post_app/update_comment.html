@@ -1,0 +1,16 @@
+{% extends 'templates/base.html' %}
+
+{% load widget_tweaks %}
+
+{% block auth_user_content %}
+    <div class="container text-center mt-5">
+        <form action="../../update_comment/{{ comment.pk }}/" method="post">{% csrf_token %}
+            {% for field in form %}
+                <label class="">{{ field.label_tag }}</label>
+                {% render_field field class+="form-control" %}
+            {% endfor %}
+            <button type="submit" class="btn btn-success mt-5" style="width: 250px;">Update</button>
+        </form>
+    </div>
+{% endblock %}
+
