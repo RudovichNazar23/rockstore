@@ -1,9 +1,11 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.views.generic.edit import View, UpdateView, DeleteView
+from django.contrib.auth.models import User
 
 from .forms import CreatePostForm, CreateCommentForm
 from .models import Post, Categorie, Comment
+
 from common.services import create_object, get_queryset, get_object_data, check_is_anonymous_user, check_object_is_none
 
 
@@ -12,7 +14,7 @@ class CreatePostView(View):
 
     def get(self, request):
         form = CreatePostForm()
-        return render(request, template_name=self.template_name, context={"form": form})
+        return render(request=request, template_name=self.template_name, context={"form": form})
 
     def post(self, request):
         form = CreatePostForm(request.POST, request.FILES)
@@ -91,11 +93,16 @@ class CreateCommentView(View):
 
     def get(self, request, id: int):
         post = self.__get_post_by_id(post_id=id)
-        form = CreateCommentForm()
-        return render(request=request, template_name=self.template_name, context={
-            "post": post,
-            "form": form,
-        })
+        post_comment = get_object_data(model=Comment, post=post)
+
+        if check_object_is_none(obj=post_comment):
+            form = CreateCommentForm()
+            return render(request=request, template_name=self.template_name, context={
+                "post": post,
+                "form": form,
+            })
+        else:
+            return redirect(f"../../post/update_comment/{post_comment.pk}/")
 
     def post(self, request, id: int):
         form = CreateCommentForm(request.POST)
@@ -119,7 +126,7 @@ class PostCommentsView(View):
 
     def get(self, request, id: int):
         post_comments = get_queryset(model=Comment, post=id)
-        return render(request=request, template_name=self.template_name, context={"post_comments": post_comments})
+        return render(request=request, template_name=self.template_name, context={"comments": post_comments})
 
 
 class UpdateCommentView(UpdateView):
@@ -135,3 +142,26 @@ class DeleteCommentView(DeleteView):
     context_object_name = "comment"
     template_name = "post_app/delete_comment.html"
     success_url = "/"
+
+
+class MyCommentsView(View):
+    template_name = "post_app/my_comments.html"
+
+    def get(self, request):
+        comments = get_queryset(Comment, user=request.user)
+        return render(request=request, template_name=self.template_name, context={"comments": comments})
+
+
+class UserCommentsView(View):
+    template_name = "post_app/user_comments.html"
+
+    def get(self, request, id: int):
+        user = get_object_data(model=User, id=id)
+        user_comments = get_queryset(model=Comment, user=id)
+        if user == request.user:
+            return redirect("../../my_comments/")
+        else:
+            return render(request=request, template_name=self.template_name, context={
+                "comments": user_comments,
+                "user": user,
+            })

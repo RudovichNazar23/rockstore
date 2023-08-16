@@ -1,0 +1,15 @@
+{% extends 'templates/comment_list.html' %}
+
+{% block message %}
+    <h2 class="m-5 text-center">This user doesn't have any comments yet...</h2>
+{% endblock %}
+
+{% block back_link %}
+    <a class="btn btn-dark m-3" href="../../../user_profile/{{ user.id }}">
+        Back
+    </a>
+{% endblock %}
+
+{% block comment_title %}
+    <a class="text-center" href="../../post/{{ comment.post.pk }}/">{{ comment.post.title }}</a>
+{% endblock %}

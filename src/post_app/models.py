@@ -16,7 +16,7 @@ class Post(models.Model):
         ("No", "No"),
     ]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)  # related_name --> post_creator
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     item_photo = models.ImageField(upload_to="post_item_photos/")
     brand = models.CharField(max_length=100)

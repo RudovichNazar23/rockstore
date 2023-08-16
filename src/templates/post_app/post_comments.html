@@ -1,22 +1,17 @@
-{% extends 'templates/base.html' %}
+{% extends 'templates/comment_list.html' %}
 
-{% block auth_user_content %}
-    {% if not post_comments %}
-        There is no comments under this post....
-    {% else %}
-        <div class="container d-flex flex-column align-items-center justify-content-center mt-5">
-         {% for comment in post_comments %}
-            <div class="card p-3 mt-3" style="width: 18rem">
-              <a class="text-center" href="../../../../user_profile/{{ comment.user.pk }}">{{ comment.user }}</a>
-                <hr>
-              <div class="card-body">
-                <p class="card-text">{{ comment.description }}</p>
-                <hr>
-                  <p class="text-center">{{ comment.date_created }}</p>
-              </div>
-            </div>
-        {% endfor %}
-        </div>
-    {% endif %}
+{% block back_link %}
+    <a class="btn btn-dark m-5" href="/">
+        Back
+    </a>
 {% endblock %}
+
+{% block message %}
+    <h2 class="m-5 text-center">There is no comments under this post....</h2>
+{% endblock %}
+
+{% block comment_title %}
+    <a class="text-center" href="../../../../user_profile/{{ comment.user.pk }}">{{ comment.user }}</a>
+{% endblock %}
+
 

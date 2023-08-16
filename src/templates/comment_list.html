@@ -1,0 +1,23 @@
+{% extends 'templates/base.html' %}
+
+{% block auth_user_content %}
+    {% block back_link %}{% endblock %}
+    {% if not comments %}
+        {% block message %}{% endblock %}
+    {% else %}
+        <div class="container d-flex flex-column align-items-center justify-content-center mt-2">
+             {% for comment in comments %}
+                <div class="card p-3 mt-3" style="width: 18rem">
+                  {% block comment_title %}{% endblock %}
+                    <hr>
+                  <div class="card-body">
+                    <p class="card-text">{{ comment.description }}</p>
+                    <hr>
+                      <p class="text-center">{{ comment.date_created }}</p>
+                  </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
+
