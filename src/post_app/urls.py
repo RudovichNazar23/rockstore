@@ -11,6 +11,8 @@ from .views import (
     PostCommentsView,
     UpdateCommentView,
     DeleteCommentView,
+    MyCommentsView,
+    UserCommentsView,
 )
 
 urlpatterns = [
@@ -24,4 +26,6 @@ urlpatterns = [
     path("post/comments/<int:id>/", PostCommentsView.as_view(), name="post_comments"),
     path("post/update_comment/<int:pk>/", UpdateCommentView.as_view(), name="update_comment"),
     path("post/delete_comment/<int:pk>/", DeleteCommentView.as_view(), name="delete_comment"),
+    path("my_comments/", MyCommentsView.as_view(), name="my_comments"),
+    path("user_comments/<int:id>/", UserCommentsView.as_view(), name="user_comments"),
 ]

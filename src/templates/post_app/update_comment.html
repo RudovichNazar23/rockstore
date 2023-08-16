@@ -3,6 +3,7 @@
 {% load widget_tweaks %}
 
 {% block auth_user_content %}
+    <h2 class="m-5 text-center">Update comment for post <a class="" href="../../{{ comment.post.id }}">{{ comment.post.title }}</a></h2>
     <div class="container text-center mt-5">
         <form action="../../update_comment/{{ comment.pk }}/" method="post">{% csrf_token %}
             {% for field in form %}
