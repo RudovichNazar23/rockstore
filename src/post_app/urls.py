@@ -1,5 +1,8 @@
 from django.urls import path
 
+from django.contrib.auth.decorators import login_required
+
+
 from .views import (
     CreatePostView,
     MyPostsListView,
@@ -13,19 +16,21 @@ from .views import (
     DeleteCommentView,
     MyCommentsView,
     UserCommentsView,
+    UserPostsView,
 )
 
 urlpatterns = [
-    path("create_post/", CreatePostView.as_view(), name="create_post"),
-    path("my_posts/", MyPostsListView.as_view(), name="my_posts"),
-    path("post/<int:pk>/", PostView.as_view(), name="post"),
-    path("update_post/<int:pk>", UpdatePostView.as_view(), name="update_post"),
-    path("delete_post/<int:pk>", DeletePostView.as_view(), name="delete_post"),
-    path("category/<str:category>/", CategoryPostListView.as_view(), name="posts_by_category"),
-    path("create_comment/<int:id>/", CreateCommentView.as_view(), name="create_comment"),
-    path("post/comments/<int:id>/", PostCommentsView.as_view(), name="post_comments"),
-    path("post/update_comment/<int:pk>/", UpdateCommentView.as_view(), name="update_comment"),
-    path("post/delete_comment/<int:pk>/", DeleteCommentView.as_view(), name="delete_comment"),
-    path("my_comments/", MyCommentsView.as_view(), name="my_comments"),
-    path("user_comments/<int:id>/", UserCommentsView.as_view(), name="user_comments"),
+    path("create_post/", login_required(CreatePostView.as_view()), name="create_post"),
+    path("my_posts/", login_required(MyPostsListView.as_view()), name="my_posts"),
+    path("user_posts/<str:username>/", login_required(UserPostsView.as_view()), name="user_posts"),
+    path("post/<int:pk>/", login_required(PostView.as_view()), name="post"),
+    path("update_post/<int:pk>/", login_required(UpdatePostView.as_view()), name="update_post"),
+    path("delete_post/<int:pk>/", login_required(DeletePostView.as_view()), name="delete_post"),
+    path("category/<str:category>/", login_required(CategoryPostListView.as_view()), name="posts_by_category"),
+    path("create_comment/<int:id>/", login_required(CreateCommentView.as_view()), name="create_comment"),
+    path("post/comments/<int:id>/", login_required(PostCommentsView.as_view()), name="post_comments"),
+    path("post/update_comment/<int:pk>/", login_required(UpdateCommentView.as_view()), name="update_comment"),
+    path("post/delete_comment/<int:pk>/", login_required(DeleteCommentView.as_view()), name="delete_comment"),
+    path("my_comments/", login_required(MyCommentsView.as_view()), name="my_comments"),
+    path("user_comments/<int:id>/", login_required(UserCommentsView.as_view()), name="user_comments"),
 ]

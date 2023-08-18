@@ -3,23 +3,19 @@
 {% load widget_tweaks %}
 
 {% block content %}
-    {% if user_profile or not request.user.is_authenticated %}
-        <a href="/">Your cannot create a profile !!!</a>
-    {% else %}
-        <form class="signup" method="post" action="../create_profile/" enctype="multipart/form-data">
-          {% csrf_token %}
-           <ul class="wrapper">
-               {% for field in form %}
-                    <li class="form-row">
-                        <label>{{ field.label_tag }}</label>
-                        {% render_field field class+="form-control" %}
-                        <p>{{ field.errors }}</p>
-                    </li>
-               {% endfor %}
-               <li class="text-center p-2">
-                   <button type="submit" class="btn btn-success btn-block" style="width: 250px; margin-top: -10px;">Create</button>
-               </li>
-           </ul>
-        </form>
-    {% endif %}
+    <form class="signup" method="post" action="../create_profile/" enctype="multipart/form-data">
+      {% csrf_token %}
+       <ul class="wrapper">
+           {% for field in form %}
+                <li class="form-row">
+                    <label>{{ field.label_tag }}</label>
+                    {% render_field field class+="form-control" %}
+                    <p>{{ field.errors }}</p>
+                </li>
+           {% endfor %}
+           <li class="text-center p-2">
+               <button type="submit" class="btn btn-success btn-block" style="width: 250px; margin-top: -10px;">Create</button>
+           </li>
+       </ul>
+    </form>
 {% endblock %}

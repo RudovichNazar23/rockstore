@@ -7,6 +7,7 @@ from .models import UserProfile
 from .forms import UserProfileForm
 
 from common.services import get_object_data, create_object, check_object_is_none
+from common.permissions import AuthorPermissionsMixin
 
 
 @login_required
@@ -23,9 +24,7 @@ def user_profile_view(request, id: int):
     profile = get_object_data(model=UserProfile, user=user)
 
     if request.user == user:
-        return redirect("my_profile/")
-    elif check_object_is_none(user):
-        return redirect("../common/page_404")
+        return redirect("../my_profile/")
     else:
         return render(request, "user_profile_app/user_profile.html", {
             "user": user,
@@ -55,15 +54,15 @@ class CreateProfileView(View):
             return render(request, self.template_name, {"form": self.form})
 
 
-class UpdateProfileView(UpdateView):
+class UpdateProfileView(AuthorPermissionsMixin, UpdateView):
     model = UserProfile
     template_name = "user_profile_app/update_profile.html"
     fields = ["profile_photo", "country", "about"]
-    success_url = "../my_profile"
+    success_url = "../../my_profile"
     context_object_name = "user"
 
 
-class DeleteProfileView(DeleteView):
+class DeleteProfileView(AuthorPermissionsMixin, DeleteView):
     model = UserProfile
     template_name = "user_profile_app/delete_profile.html"
     context_object_name = "profile"

@@ -4,9 +4,9 @@
 {% block form_title %} Delete Post {% endblock %}
 
 {% block form_content %}
-    Are you sure that you want to delete post <a href="../post/{{ post.pk }}" class="text-info" style="text-decoration: none; font-size: 20px;">"{{post.title}}"?
+    Are you sure that you want to delete post <a href="../../post/{{ post.pk }}" class="text-info" style="text-decoration: none; font-size: 20px;">"{{post.title}}"?
     </a>
 {% endblock %}
 {% block cancel_link %}
-    <a href="../my_posts" class="btn btn-light">Cancel</a>
+    <a href="../../my_posts" class="btn btn-light">Cancel</a>
 {% endblock %}
