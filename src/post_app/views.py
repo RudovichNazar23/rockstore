@@ -7,6 +7,7 @@ from .forms import CreatePostForm, CreateCommentForm
 from .models import Post, Categorie, Comment
 
 from common.services import create_object, get_queryset, get_object_data, check_is_anonymous_user, check_object_is_none
+from common.permissions import AuthorPermissionsMixin
 
 
 class CreatePostView(View):
@@ -32,10 +33,16 @@ class MyPostsListView(View):
     template_name = "post_app/my_posts.html"
 
     def get(self, request):
-        if check_is_anonymous_user(request.user):
-            return redirect("../../common/page_404")
         posts = get_queryset(self.model, user=request.user)
         return render(request, template_name=self.template_name, context={"posts": posts})
+
+
+class UserPostsView(View):
+    template_name = "post_app/user_posts.html"
+
+    def get(self, request, username: str):
+        user_posts = get_queryset(model=Post, user__username=username)
+        return render(request=request, template_name=self.template_name, context={"posts": user_posts})
 
 
 class PostView(View):
@@ -44,12 +51,10 @@ class PostView(View):
 
     def get(self, request, pk: int):
         post = get_object_data(model=self.model, pk=pk)
-        if check_object_is_none(obj=post):
-            return redirect("../../../common/page_404")
         return render(request, template_name=self.template_name, context={"post": post})
 
 
-class UpdatePostView(UpdateView):
+class UpdatePostView(AuthorPermissionsMixin, UpdateView):
     model = Post
     fields = [
         "title",
@@ -65,13 +70,14 @@ class UpdatePostView(UpdateView):
     ]
     template_name = "post_app/update_post.html"
     context_object_name = "post"
-    success_url = "../my_posts"
+    success_url = "../../my_posts"
+    permission_denied_message = "Error"
 
 
-class DeletePostView(DeleteView):
+class DeletePostView(AuthorPermissionsMixin, DeleteView):
     model = Post
     context_object_name = "post"
-    success_url = "../my_posts"
+    success_url = "../../my_posts"
     template_name = "post_app/delete_post.html"
 
 
@@ -80,20 +86,16 @@ class CategoryPostListView(View):
 
     def get(self, request, category: str):
         category = get_object_data(model=Categorie, name=category)
-
-        if check_object_is_none(obj=category):
-            return redirect("../../../common/page_404")
-        else:
-            posts = get_queryset(model=Post, category__name=category)
-            return render(request, template_name=self.template_name, context={"posts": posts})
+        posts = get_queryset(model=Post, category__name=category)
+        return render(request, template_name=self.template_name, context={"posts": posts})
 
 
 class CreateCommentView(View):
     template_name = "post_app/create_comment.html"
 
     def get(self, request, id: int):
-        post = self.__get_post_by_id(post_id=id)
-        post_comment = get_object_data(model=Comment, post=post)
+        post = get_object_data(model=Post, id=id)
+        post_comment = get_object_data(model=Comment, user=request.user, post=post)
 
         if check_object_is_none(obj=post_comment):
             form = CreateCommentForm()
@@ -106,19 +108,11 @@ class CreateCommentView(View):
 
     def post(self, request, id: int):
         form = CreateCommentForm(request.POST)
-        post = self.__get_post_by_id(post_id=id)
+        post = get_object_data(model=Post, id=id)
 
         if form.is_valid():
             create_object(model=Comment, user=request.user, post=post, **form.cleaned_data)
             return redirect(f"../../post/comments/{post.id}")
-
-    @staticmethod
-    def __get_post_by_id(post_id: int):
-        post = get_object_data(model=Post, id=post_id)
-        if post is None:
-            return redirect("../../common/page_404")
-        else:
-            return post
 
 
 class PostCommentsView(View):
@@ -129,7 +123,7 @@ class PostCommentsView(View):
         return render(request=request, template_name=self.template_name, context={"comments": post_comments})
 
 
-class UpdateCommentView(UpdateView):
+class UpdateCommentView(AuthorPermissionsMixin, UpdateView):
     model = Comment
     template_name = "post_app/update_comment.html"
     fields = ["description"]
@@ -137,7 +131,7 @@ class UpdateCommentView(UpdateView):
     success_url = "/"
 
 
-class DeleteCommentView(DeleteView):
+class DeleteCommentView(AuthorPermissionsMixin, DeleteView):
     model = Comment
     context_object_name = "comment"
     template_name = "post_app/delete_comment.html"

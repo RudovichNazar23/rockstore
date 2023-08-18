@@ -40,7 +40,7 @@ class Comment(models.Model):
     date_created = models.DateField(auto_now=True)
 
     class Meta:
-        ordering = ("date_created", )
+        ordering = ("-date_created", )
 
     def __str__(self):
         return f"{self.user} - {self.post.title}"
@@ -51,9 +51,14 @@ class Like(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     like = models.BooleanField(default=False)
 
+    def __str__(self):
+        return f"{self.user} - {self.post}"
+
 
 class Repost(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f"{self.user} - {self.post}"
 
