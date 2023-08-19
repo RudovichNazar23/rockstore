@@ -4,9 +4,9 @@ from django.views.generic.edit import View, UpdateView, DeleteView
 from django.contrib.auth.models import User
 
 from .forms import CreatePostForm, CreateCommentForm
-from .models import Post, Categorie, Comment
+from .models import Post, Categorie, Comment, Repost
 
-from common.services import create_object, get_queryset, get_object_data, check_is_anonymous_user, check_object_is_none
+from common.services import create_object, get_queryset, get_object_data, check_is_anonymous_user, check_object_is_none, count_objects
 from common.permissions import AuthorPermissionsMixin
 
 
@@ -41,8 +41,12 @@ class UserPostsView(View):
     template_name = "post_app/user_posts.html"
 
     def get(self, request, username: str):
+        user = get_object_data(model=User, username=username)
         user_posts = get_queryset(model=Post, user__username=username)
-        return render(request=request, template_name=self.template_name, context={"posts": user_posts})
+        return render(request=request, template_name=self.template_name, context={
+            "posts": user_posts,
+            "user": user,
+        })
 
 
 class PostView(View):
@@ -104,7 +108,7 @@ class CreateCommentView(View):
                 "form": form,
             })
         else:
-            return redirect(f"../../post/update_comment/{post_comment.pk}/")
+            return redirect(f"../../update_comment/{post_comment.pk}/")
 
     def post(self, request, id: int):
         form = CreateCommentForm(request.POST)
@@ -112,7 +116,7 @@ class CreateCommentView(View):
 
         if form.is_valid():
             create_object(model=Comment, user=request.user, post=post, **form.cleaned_data)
-            return redirect(f"../../post/comments/{post.id}")
+            return redirect(f"../../{post.id}/comments/")
 
 
 class PostCommentsView(View):
@@ -128,14 +132,14 @@ class UpdateCommentView(AuthorPermissionsMixin, UpdateView):
     template_name = "post_app/update_comment.html"
     fields = ["description"]
     context_object_name = "comment"
-    success_url = "/"
+    success_url = "../../../my_comments/"
 
 
 class DeleteCommentView(AuthorPermissionsMixin, DeleteView):
     model = Comment
     context_object_name = "comment"
     template_name = "post_app/delete_comment.html"
-    success_url = "/"
+    success_url = "../../../my_comments/"
 
 
 class MyCommentsView(View):
@@ -159,3 +163,11 @@ class UserCommentsView(View):
                 "comments": user_comments,
                 "user": user,
             })
+
+
+class CreateRepostView(View):
+    def post(self, request, id: int):
+        post = get_object_data(model=Post, id=id)
+        create_object(model=Repost, user=request.user, post=post)
+        return redirect("/")
+

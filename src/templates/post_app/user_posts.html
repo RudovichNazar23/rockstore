@@ -1,21 +1,17 @@
-{% extends 'templates/base.html' %}
+{% extends 'templates/post_list.html' %}
 
-{% block auth_user_content %}
-    {% for post in posts %}
-        <ul class="list-group list-group-light m-auto" style="width: 700px;">
-        {% for post in posts %}
-              <li class="list-group-item d-flex justify-content-center align-items-center m-5 border rounded" style="">
-                <div class="container d-flex flex-row justify-content-between">
-                    <div class="fw-bold"><a href="../../post/{{ post.pk }}" class="" style="text-decoration: none;">{{ post.title }}</a></div>
-                   <div> {{ post.date_created.date }} </div>
-                    <div>{{ post.price }}$</div>
-                </div>
-                <div class="p-1"><a href="../../post/comments/{{ post.id }}/">Comments</a></div>
-                <div class="p-1"><a>Likes</a></div>
-                <div class="p-1"><a>Reposts</a></div>
-              </li>
-        {% endfor %}
-    </ul>
-    {% endfor %}
+{% block back_link %}
+    <a class="btn btn-dark m-5" href="../../../user_profile/{{ user.id }}">Back</a>
 {% endblock %}
+
+{% block message %}<h2 class="text-center">This user doesn't have any posts yet....</h2>{% endblock %}
+
+{% block content %}
+    <div class="p-1"><a href="../../post/{{ post.id }}/comments/">Comments</a></div>
+    <div class="p-1"><a>Likes</a></div>
+    <form action="../../post/{{ post.id }}/create_repost/" method="POST">{% csrf_token %}
+        <input type="submit" class="p-1" value="Make Repost">
+    </form>
+{% endblock %}
+
 

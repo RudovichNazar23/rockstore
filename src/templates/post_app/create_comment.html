@@ -3,7 +3,7 @@
 {% load widget_tweaks %}
 
 {% block auth_user_content %}
-    <form action="" method="post">{% csrf_token %}
+    <form action="../../{{ post.id }}/create_comment/" method="post">{% csrf_token %}
         <div class="container d-flex flex-column align-items-center justify-content-center mt-5">
             {% for field in form %}
                 <label>{{ field.label_tag }}</label>

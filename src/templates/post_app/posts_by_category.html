@@ -6,7 +6,7 @@
             There aren't any posts with this category...
         </h2>
     {% else %}
-        <div class="container d-flex flex-row align-items-start bg-light border border-top-0" style="height: 950px">
+        <div class="container d-flex flex-row align-items-start justify-content-center bg-light border border-top-0 p-2" style="height: 950px">
             {% for post in posts %}
                 <div class="card m-2" style="width: 450px;">
                     <img class="card-img-top rounded" src="{{ post.item_photo.url }}" width="350" height="350">
@@ -18,12 +18,14 @@
                             <a href="../../../user_profile/{{ post.user.pk }}">{{ post.user.username }}</a>
                         </p>
                         <a class="btn btn-primary rounded" href="../../post/{{ post.pk }}">Check</a>
-                        <a class="btn btn-light" href="../../create_comment/{{ post.id }}">Leave a Comment</a>
-                        <a class="btn btn-light" href="">Repost</a>
+                        <a class="btn btn-light" href="../../post/{{ post.id }}/create_comment/">Leave a Comment</a>
+                        <form action="../../post/{{ post.id }}/create_repost/" method="POST">{% csrf_token %}
+                            <input type="submit" value="Make Repost" class="btn btn-light">
+                        </form>
                         <hr>
                         <a class="btn btn-danger" href="">25 Likes</a>
                         <a class="btn btn-danger" href="">30 Reposts</a>
-                        <a class="btn btn-light" href="../../post/comments/{{ post.id }}">Comments</a>
+                        <a class="btn btn-light" href="../../post/{{ post.id }}/comments/">Comments</a>
                     </div>
                 </div>
             {% endfor %}

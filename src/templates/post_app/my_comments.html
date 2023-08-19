@@ -12,7 +12,11 @@
 {% endblock %}
 
 {% block comment_title %}
-<a class="text-center" href="../post/{{ comment.post.pk }}">{{ comment.post.title }}</a>
+    <a class="text-center" href="../post/{{ comment.post.pk }}">{{ comment.post.title }}</a>
 {% endblock %}
 
+{% block content %}
+    <a class="btn btn-info p-1" href="../post/update_comment/{{ comment.id }}/">Edit</a>
+    <a class="btn btn-danger p-1 mt-1" href="../post/delete_comment/{{ comment.id }}/">Delete</a>
+{% endblock %}
 
