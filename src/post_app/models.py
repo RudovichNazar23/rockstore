@@ -60,5 +60,5 @@ class Repost(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.user} - {self.post}"
+        return f"{self.user} - {self.post.title}"
 

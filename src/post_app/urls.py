@@ -17,6 +17,7 @@ from .views import (
     MyCommentsView,
     UserCommentsView,
     UserPostsView,
+    CreateRepostView,
 )
 
 urlpatterns = [
@@ -27,10 +28,11 @@ urlpatterns = [
     path("update_post/<int:pk>/", login_required(UpdatePostView.as_view()), name="update_post"),
     path("delete_post/<int:pk>/", login_required(DeletePostView.as_view()), name="delete_post"),
     path("category/<str:category>/", login_required(CategoryPostListView.as_view()), name="posts_by_category"),
-    path("create_comment/<int:id>/", login_required(CreateCommentView.as_view()), name="create_comment"),
-    path("post/comments/<int:id>/", login_required(PostCommentsView.as_view()), name="post_comments"),
+    path("post/<int:id>/create_comment/", login_required(CreateCommentView.as_view()), name="create_comment"),
+    path("post/<int:id>/comments/", login_required(PostCommentsView.as_view()), name="post_comments"),
     path("post/update_comment/<int:pk>/", login_required(UpdateCommentView.as_view()), name="update_comment"),
     path("post/delete_comment/<int:pk>/", login_required(DeleteCommentView.as_view()), name="delete_comment"),
     path("my_comments/", login_required(MyCommentsView.as_view()), name="my_comments"),
     path("user_comments/<int:id>/", login_required(UserCommentsView.as_view()), name="user_comments"),
+    path("post/<int:id>/create_repost/", login_required(CreateRepostView.as_view()), name="create_repost"),
 ]
