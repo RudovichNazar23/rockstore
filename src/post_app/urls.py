@@ -18,6 +18,9 @@ from .views import (
     UserCommentsView,
     UserPostsView,
     CreateRepostView,
+    MyRepostsView,
+    UserRepostsView,
+    DeleteRepostView,
 )
 
 urlpatterns = [
@@ -35,4 +38,7 @@ urlpatterns = [
     path("my_comments/", login_required(MyCommentsView.as_view()), name="my_comments"),
     path("user_comments/<int:id>/", login_required(UserCommentsView.as_view()), name="user_comments"),
     path("post/<int:id>/create_repost/", login_required(CreateRepostView.as_view()), name="create_repost"),
+    path("my_reposts/", login_required(MyRepostsView.as_view()), name="my_reposts"),
+    path("user_reposts/<int:id>/", login_required(UserRepostsView.as_view()), name="user_reposts"),
+    path("delete_repost/<int:pk>/", login_required(DeleteRepostView.as_view()), name="delete_repost"),
 ]

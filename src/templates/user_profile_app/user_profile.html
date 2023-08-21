@@ -18,6 +18,10 @@
     <a class="nav-link active" href="../../posts/user_posts/{{ user.username }}/"> Posts</a>
 {% endblock %}
 
+{% block repost_link %}
+    <a class="nav-link active" href="../../posts/user_reposts/{{ user.id }}/">Reposts</a>
+{% endblock %}
+
 {% block link_comments %}
     <a class="nav-link active" href="../../posts/user_comments/{{ user.id }}">Comments</a>
 {% endblock %}

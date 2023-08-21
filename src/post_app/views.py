@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from .forms import CreatePostForm, CreateCommentForm
 from .models import Post, Categorie, Comment, Repost
 
-from common.services import create_object, get_queryset, get_object_data, check_is_anonymous_user, check_object_is_none, count_objects
+from common.services import create_object, get_queryset, get_object_data, check_is_anonymous_user, check_object_is_none
 from common.permissions import AuthorPermissionsMixin
 
 
@@ -171,3 +171,29 @@ class CreateRepostView(View):
         create_object(model=Repost, user=request.user, post=post)
         return redirect("/")
 
+
+class MyRepostsView(View):
+    template_name = "post_app/my_reposts.html"
+
+    def get(self, request):
+        reposts = get_queryset(model=Repost, user=request.user)
+        return render(request=request, template_name=self.template_name, context={"posts": reposts})
+
+
+class UserRepostsView(View):
+    template_name = "post_app/user_reposts.html"
+
+    def get(self, request, id: int):
+        user = get_object_data(model=User, id=id)
+        reposts = get_queryset(model=Repost, user=id)
+        return render(request=request, template_name=self.template_name, context={
+            "reposts": reposts,
+            "user": user,
+        })
+
+
+class DeleteRepostView(AuthorPermissionsMixin, DeleteView):
+    model = Repost
+    template_name = "post_app/delete_repost.html"
+    context_object_name = "repost"
+    success_url = ""
