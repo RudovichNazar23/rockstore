@@ -1,23 +1,42 @@
 {% extends 'templates/base.html' %}
 
-{% block auth_user_content %}
-    {% block back_link %}
-    {% endblock %}
-    {% if not posts %}
-        {% block message %}{% endblock %}
-    {% else %}
-        <ul class="list-group list-group-light m-auto" style="width: 700px;">
-            {% for post in posts %}
-                  <li class="list-group-item d-flex justify-content-center align-items-center m-5 border rounded" style="">
-                    <div class="container d-flex flex-row justify-content-between">
-                        <div class="fw-bold"><a href="../../post/{{ post.pk }}" class="" style="text-decoration: none;">{{ post.title }}</a></div>
-                       <div> {{ post.date_created.date }} </div>
-                        <div>{{ post.price }}$</div>
-                    </div>
-                    {% block content %}
-                    {% endblock %}
-                  </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+{% load static %}
+
+{% block head_links %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/post_title_animation.css' %}">
 {% endblock %}
+
+{% block auth_user_content %}
+        {% block back_link %}{% endblock %}
+        {% if not posts %}
+            <div class="container m-auto">
+                <h2 class="text-center">{% block message %}{% endblock %}</h2>
+            </div>
+        {% else %}
+            {% block top %}{% endblock %}
+            <div class="container d-flex flex-row align-items-start justify-content-center bg-light border border-top-0 p-2 mt-3" style="height: 950px">
+                {% for post in posts %}
+                    <div class="card m-2" style="width: 450px;">
+                        {% block image %}
+                            <img class="card-img-top rounded" src="{{ post.item_photo.url }}" width="350" height="350">
+                        {% endblock %}
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                {% block post_title %}{{ post.title }}{% endblock %}
+                            </h5>
+                            <p class="card-text">
+                                <a href="../../../user_profile/{{ post.user.pk }}">{{ post.user.username }}</a>
+                            </p>
+                            {% block content %}
+                            {% endblock %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+{% endblock %}
+
+
+
+
+

@@ -1,25 +1,27 @@
 {% extends 'templates/post_list.html' %}
 {% load static %}
 
+{% block head_link %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/post_title_animation.css' %}">
+{% endblock %}
+
 {% block back_link %}
-    <div>
-        <a href="../../user_profile/my_profile/" class="btn btn-dark m-5">
-            Back
-        </a>
-    </div>
+    <a class="btn btn-dark m-5" href="../../../user_profile/{{ user.id }}">Back</a>
 {% endblock %}
 
 {% block message %}
-     You don't have any posts....
+    This user doesn't have any reposts yet...
+{% endblock %}
+
+{% block image %}
+    <img class="card-img-top rounded" src="{{ post.post.item_photo.url }}" width="350" height="350">
 {% endblock %}
 
 {% block post_title %}
-    <a class="title" href="../post/{{ post.pk }}/">{{ post.title }}</a>
+    <a class="title" href="">{{ post.post.title }}</a>
 {% endblock %}
 
 {% block content %}
-    <a href="../update_post/{{ post.pk }}" class="btn btn-success">Update</a>
-    <a href="../delete_post/{{ post.pk }}" class="btn btn-danger">Delete</a>
     <hr>
     <div class="d-flex flex-row align-items-start justify-content-between">
         <a class="btn btn-light" href="../../post/{{ post.id }}/create_comment/">Leave a Comment</a>
@@ -29,4 +31,3 @@
         <a class="btn btn-light" href="../../post/{{ post.id }}/comments/">Comments</a>
     </div>
 {% endblock %}
-
