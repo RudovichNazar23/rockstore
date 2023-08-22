@@ -22,11 +22,11 @@
     <a href="../delete_post/{{ post.pk }}" class="btn btn-danger">Delete</a>
     <hr>
     <div class="d-flex flex-row align-items-start justify-content-between">
-        <a class="btn btn-light" href="../../post/{{ post.id }}/create_comment/">Leave a Comment</a>
+        <a class="btn btn-light" href="../post/{{ post.id }}/create_comment/">Leave a Comment</a>
         <form action="../../post/{{ post.id }}/create_repost/" method="POST">{% csrf_token %}
             <input type="submit" value="Make Repost" class="btn btn-light">
         </form>
-        <a class="btn btn-light" href="../../post/{{ post.id }}/comments/">Comments</a>
+        <a class="btn btn-light" href="../post/{{ post.id }}/comments/">Comments</a>
     </div>
 {% endblock %}
 

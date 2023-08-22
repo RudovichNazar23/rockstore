@@ -5,9 +5,9 @@
 {% endblock %}
 
 {% block form_content %}
-    Are you sure that you want to delete repost for <a href="">{{ repost.post.title }}</a>
+    Are you sure that you want to delete repost for <a href="../../post/{{ repost.post.id }}">{{ repost.post.title }}</a>
 {% endblock %}
 
 {% block cancel_link %}
-
+    <a class="btn btn-light" href="../../my_reposts/">Cancel</a>
 {% endblock %}

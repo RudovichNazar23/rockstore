@@ -168,8 +168,11 @@ class UserCommentsView(View):
 class CreateRepostView(View):
     def post(self, request, id: int):
         post = get_object_data(model=Post, id=id)
-        create_object(model=Repost, user=request.user, post=post)
-        return redirect("/")
+        if get_object_data(model=Repost, post=id, user=request.user):
+            return redirect("../../../my_reposts/")
+        else:
+            create_object(model=Repost, user=request.user, post=post)
+            return redirect("/")
 
 
 class MyRepostsView(View):
@@ -187,7 +190,7 @@ class UserRepostsView(View):
         user = get_object_data(model=User, id=id)
         reposts = get_queryset(model=Repost, user=id)
         return render(request=request, template_name=self.template_name, context={
-            "reposts": reposts,
+            "posts": reposts,
             "user": user,
         })
 
@@ -196,4 +199,4 @@ class DeleteRepostView(AuthorPermissionsMixin, DeleteView):
     model = Repost
     template_name = "post_app/delete_repost.html"
     context_object_name = "repost"
-    success_url = ""
+    success_url = "../../my_reposts/"

@@ -13,19 +13,21 @@
                 <h2 class="text-center">{% block message %}{% endblock %}</h2>
             </div>
         {% else %}
-            {% block top %}{% endblock %}
-            <div class="container d-flex flex-row align-items-start justify-content-center bg-light border border-top-0 p-2 mt-3" style="height: 950px">
+            <div class="container d-flex flex-column align-items-center bg-light border rounded p-2 mt-3" style="height: 950px">
                 {% for post in posts %}
                     <div class="card m-2" style="width: 450px;">
+                        {% block top %}{% endblock %}
                         {% block image %}
-                            <img class="card-img-top rounded" src="{{ post.item_photo.url }}" width="350" height="350">
+                            <img class="card-img-top rounded" src="{{ post.item_photo.url }}" width="350" height="400">
                         {% endblock %}
                         <div class="card-body">
                             <h5 class="card-title">
                                 {% block post_title %}{{ post.title }}{% endblock %}
                             </h5>
                             <p class="card-text">
-                                <a href="../../../user_profile/{{ post.user.pk }}">{{ post.user.username }}</a>
+                                {% block post_owner %}
+                                    <a href="../../../user_profile/{{ post.user.pk }}">{{ post.user.username }}</a>
+                                {% endblock %}
                             </p>
                             {% block content %}
                             {% endblock %}
