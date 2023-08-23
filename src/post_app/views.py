@@ -1,13 +1,12 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.views.generic.edit import View, UpdateView, DeleteView
-from django.contrib.auth.models import User
 
 from .forms import CreatePostForm, CreateCommentForm
 from .models import Post, Categorie, Comment, Repost
 
 from common.services import create_object, get_queryset, get_object_data, check_is_anonymous_user, check_object_is_none
-from common.permissions import AuthorPermissionsMixin
+from common.mixins import AuthorPermissionsMixin, RedirectMixin, IdentifyRequestUserMixin
 
 
 class CreatePostView(View):
@@ -37,15 +36,15 @@ class MyPostsListView(View):
         return render(request, template_name=self.template_name, context={"posts": posts})
 
 
-class UserPostsView(View):
+class UserPostsView(IdentifyRequestUserMixin, View):
     template_name = "post_app/user_posts.html"
+    redirect_url = "../../my_posts/"
 
-    def get(self, request, username: str):
-        user = get_object_data(model=User, username=username)
-        user_posts = get_queryset(model=Post, user__username=username)
+    def get(self, request, id: int):
+        user_posts = get_queryset(model=Post, user=self.get_object())
         return render(request=request, template_name=self.template_name, context={
             "posts": user_posts,
-            "user": user,
+            "user": self.get_object(),
         })
 
 
@@ -94,29 +93,33 @@ class CategoryPostListView(View):
         return render(request, template_name=self.template_name, context={"posts": posts})
 
 
-class CreateCommentView(View):
+class CreateCommentView(RedirectMixin, View):
     template_name = "post_app/create_comment.html"
+    model = Post
 
     def get(self, request, id: int):
-        post = get_object_data(model=Post, id=id)
-        post_comment = get_object_data(model=Comment, user=request.user, post=post)
-
-        if check_object_is_none(obj=post_comment):
-            form = CreateCommentForm()
-            return render(request=request, template_name=self.template_name, context={
-                "post": post,
-                "form": form,
-            })
-        else:
-            return redirect(f"../../update_comment/{post_comment.pk}/")
+        form = CreateCommentForm()
+        return render(request=request, template_name=self.template_name, context={
+            "post": get_object_data(model=Post, id=self.kwargs["id"]),
+            "form": form,
+        })
 
     def post(self, request, id: int):
         form = CreateCommentForm(request.POST)
-        post = get_object_data(model=Post, id=id)
+        post = get_object_data(model=Post, id=self.kwargs["id"])
 
         if form.is_valid():
             create_object(model=Comment, user=request.user, post=post, **form.cleaned_data)
             return redirect(f"../../{post.id}/comments/")
+
+    def get_object(self):
+        post = get_object_data(model=Post, id=self.kwargs["id"])
+        post_comment = get_object_data(model=Comment, user=self.request.user, post=post)
+        return post_comment
+
+    def get_redirect_url(self):
+        url = f"../../update_comment/{self.get_object().pk}/"
+        return url
 
 
 class PostCommentsView(View):
@@ -150,29 +153,31 @@ class MyCommentsView(View):
         return render(request=request, template_name=self.template_name, context={"comments": comments})
 
 
-class UserCommentsView(View):
+class UserCommentsView(IdentifyRequestUserMixin, View):
     template_name = "post_app/user_comments.html"
+    redirect_url = "../../my_comments/"
+    model = Comment
 
     def get(self, request, id: int):
-        user = get_object_data(model=User, id=id)
-        user_comments = get_queryset(model=Comment, user=id)
-        if user == request.user:
-            return redirect("../../my_comments/")
-        else:
-            return render(request=request, template_name=self.template_name, context={
-                "comments": user_comments,
-                "user": user,
-            })
+        user_comments = get_queryset(model=self.model, user=id)
+        return render(request=request, template_name=self.template_name, context={
+            "comments": user_comments,
+            "user": self.get_object(),
+        })
 
 
-class CreateRepostView(View):
+class CreateRepostView(RedirectMixin, View):
+    model = Repost
+    redirect_url = "../../../my_reposts/"
+
     def post(self, request, id: int):
         post = get_object_data(model=Post, id=id)
-        if get_object_data(model=Repost, post=id, user=request.user):
-            return redirect("../../../my_reposts/")
-        else:
-            create_object(model=Repost, user=request.user, post=post)
-            return redirect("/")
+        create_object(model=Repost, user=request.user, post=post)
+        return redirect("/")
+
+    def get_object(self):
+        repost = get_object_data(model=self.model, post=self.kwargs["id"], user=self.request.user)
+        return repost
 
 
 class MyRepostsView(View):
@@ -183,15 +188,15 @@ class MyRepostsView(View):
         return render(request=request, template_name=self.template_name, context={"posts": reposts})
 
 
-class UserRepostsView(View):
+class UserRepostsView(IdentifyRequestUserMixin, View):
     template_name = "post_app/user_reposts.html"
+    redirect_url = "../../my_reposts/"
 
     def get(self, request, id: int):
-        user = get_object_data(model=User, id=id)
         reposts = get_queryset(model=Repost, user=id)
         return render(request=request, template_name=self.template_name, context={
             "posts": reposts,
-            "user": user,
+            "user": self.get_object(),
         })
 
 

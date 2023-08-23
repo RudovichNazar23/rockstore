@@ -26,7 +26,7 @@ from .views import (
 urlpatterns = [
     path("create_post/", login_required(CreatePostView.as_view()), name="create_post"),
     path("my_posts/", login_required(MyPostsListView.as_view()), name="my_posts"),
-    path("user_posts/<str:username>/", login_required(UserPostsView.as_view()), name="user_posts"),
+    path("user_posts/<int:id>/", login_required(UserPostsView.as_view()), name="user_posts"),
     path("post/<int:pk>/", login_required(PostView.as_view()), name="post"),
     path("update_post/<int:pk>/", login_required(UpdatePostView.as_view()), name="update_post"),
     path("delete_post/<int:pk>/", login_required(DeletePostView.as_view()), name="delete_post"),
