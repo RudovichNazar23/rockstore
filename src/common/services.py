@@ -19,7 +19,7 @@ def check_is_anonymous_user(user):
 
 
 def check_object_is_none(obj):
-    return obj is None
+    return obj == None
 
 
 def create_object(model, **kwargs):

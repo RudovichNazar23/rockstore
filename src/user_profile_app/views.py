@@ -1,13 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import View, UpdateView, DeleteView
-from django.contrib.auth.models import User
 
 from .models import UserProfile
 from .forms import UserProfileForm
 
 from common.services import get_object_data, create_object, check_object_is_none
-from common.permissions import AuthorPermissionsMixin
+from common.mixins import AuthorPermissionsMixin, RedirectMixin, IdentifyRequestUserMixin
 
 
 @login_required
@@ -18,30 +17,29 @@ def my_profile_view(request):
     })
 
 
-@login_required
-def user_profile_view(request, id: int):
-    user = get_object_data(model=User, id=id)
-    profile = get_object_data(model=UserProfile, user=user)
+class UserProfileView(IdentifyRequestUserMixin, View):
+    template_name = "user_profile_app/user_profile.html"
+    model = UserProfile
+    redirect_url = "../my_profile/"
 
-    if request.user == user:
-        return redirect("../my_profile/")
-    else:
-        return render(request, "user_profile_app/user_profile.html", {
-            "user": user,
+    def get(self, request, id: int):
+        profile = get_object_data(model=self.model, user=self.get_object())
+        return render(request=request, template_name=self.template_name, context={
+            "user": self.get_object(),
             "profile": profile
         })
 
 
-class CreateProfileView(View):
+class CreateProfileView(RedirectMixin, View):
     form = UserProfileForm()
     template_name = "user_profile_app/create_profile.html"
     success_url = "../my_profile/"
+    model = UserProfile
+    redirect_url = "../my_profile/"
 
     def get(self, request):
-        user_profile = get_object_data(UserProfile, user=request.user)
         return render(request, self.template_name, {
             "form": self.form,
-            "user_profile": user_profile
         })
 
     def post(self, request):
@@ -52,6 +50,10 @@ class CreateProfileView(View):
             return redirect(self.success_url)
         else:
             return render(request, self.template_name, {"form": self.form})
+
+    def get_object(self):
+        profile = get_object_data(model=self.model, user=self.request.user)
+        return profile
 
 
 class UpdateProfileView(AuthorPermissionsMixin, UpdateView):
