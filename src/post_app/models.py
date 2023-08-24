@@ -2,8 +2,12 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class Categorie(models.Model):
+class Category(models.Model):
     name = models.CharField(max_length=155, default="")
+
+    class Meta:
+        verbose_name = "Category"
+        verbose_name_plural = "Categories"
 
     def __str__(self):
         return f"{self.name}"
@@ -22,7 +26,7 @@ class Post(models.Model):
     brand = models.CharField(max_length=100)
     item_model = models.CharField(max_length=100)
     date_of_manufacture = models.DateField()
-    category = models.ForeignKey(Categorie, on_delete=models.CASCADE, related_name="category")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="category")
     price = models.IntegerField()
     possibility_of_exchange = models.CharField(choices=CHOICES)
     description = models.TextField()

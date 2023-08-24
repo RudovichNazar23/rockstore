@@ -1,16 +1,16 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import logout
 
-from post_app.models import Categorie
+from django.views.generic.list import ListView
+from django.contrib.auth.views import LogoutView
 
-from common import services
-
-
-def home(request):
-    categories = services.get_all_objects(Categorie)
-    return render(request, "registration_app/home.html", {"categories": categories})
+from post_app.models import Category
 
 
-def logout_view(request):
-    logout(request)
-    return redirect("/")
+class HomePageView(ListView):
+    model = Category
+    template_name = "registration_app/home.html"
+    context_object_name = "categories"
+
+
+class Logout(LogoutView):
+    redirect_field_name = "/"
+

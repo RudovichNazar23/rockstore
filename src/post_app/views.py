@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.views.generic.edit import View, UpdateView, DeleteView
 
 from .forms import CreatePostForm, CreateCommentForm
-from .models import Post, Categorie, Comment, Repost
+from .models import Post, Category, Comment, Repost
 
 from common.services import create_object, get_queryset, get_object_data, check_is_anonymous_user, check_object_is_none
 from common.mixins import AuthorPermissionsMixin, RedirectMixin, IdentifyRequestUserMixin
@@ -88,7 +88,7 @@ class CategoryPostListView(View):
     template_name = "post_app/posts_by_category.html"
 
     def get(self, request, category: str):
-        category = get_object_data(model=Categorie, name=category)
+        category = get_object_data(model=Category, name=category)
         posts = get_queryset(model=Post, category__name=category)
         return render(request, template_name=self.template_name, context={"posts": posts})
 
