@@ -28,5 +28,16 @@
         </form>
         <a class="btn btn-light" href="../post/{{ post.id }}/comments/">Comments</a>
     </div>
+    <hr>
+    <div class="container d-flex flex-row align-items-center">
+        <form action="../like_post/{{ post.id }}/" method="POST">{% csrf_token %}
+            {% if request.user not in post.liked.all %}
+                <button type="submit" class="btn btn-success p-2">{{ post.liked.all.count }} likes</button>
+            {% else %}
+                <button type="submit" class="btn btn-danger p-2">{{ post.liked.all.count }} likes</button>
+            {% endif %}
+        </form>
+        <a class="btn btn-light p-2 m-1">100 Reposts</a>
+    </div>
 {% endblock %}
 

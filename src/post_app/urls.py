@@ -21,6 +21,7 @@ from .views import (
     MyRepostsView,
     UserRepostsView,
     DeleteRepostView,
+    LikePostView,
 )
 
 urlpatterns = [
@@ -41,4 +42,5 @@ urlpatterns = [
     path("my_reposts/", login_required(MyRepostsView.as_view()), name="my_reposts"),
     path("user_reposts/<int:id>/", login_required(UserRepostsView.as_view()), name="user_reposts"),
     path("delete_repost/<int:pk>/", login_required(DeleteRepostView.as_view()), name="delete_repost"),
+    path("like_post/<int:id>/", LikePostView.as_view(), name="like_post"),
 ]

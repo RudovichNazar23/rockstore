@@ -1,7 +1,7 @@
 from django.http import Http404, HttpResponseRedirect
 from django.contrib.auth.models import User
 
-from .services import check_object_is_none, get_object_data
+from .services import check_object_is_none, get_object_data, get_or_create_object
 
 
 class BaseRedirectMixin:
@@ -48,4 +48,36 @@ class IdentifyRequestUserMixin(BaseRedirectMixin):
 
     def user_is_request_user(self):
         return self.request.user == self.get_object()
+
+
+class LikePostMixin:
+    redirect_url = "/"
+    model = None
+
+    def add_or_remove_user(self):
+        post_obj = self.get_object()
+
+        if self.request.user in post_obj.liked.all():
+            post_obj.liked.remove(self.request.user)
+        else:
+            post_obj.liked.add(self.request.user)
+
+    def change_like_value(self, model):
+        like, created = get_or_create_object(model=model, user=self.request.user, post_id=self.kwargs["id"])
+
+        if not created:
+            if like.value == "Like":
+                like.value = "Unlike"
+            else:
+                like.value = "Like"
+        like.save()
+
+    def get_object(self):
+        obj = get_object_data(model=self.model, id=self.kwargs["id"])
+        return obj
+
+    def get_redirect_url(self):
+        self.redirect_url = self.request.META.get("HTTP_REFERER")
+        return self.redirect_url
+
 
