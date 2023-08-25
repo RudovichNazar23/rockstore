@@ -25,3 +25,6 @@ def check_object_is_none(obj):
 def create_object(model, **kwargs):
     return model.objects.create(**kwargs)
 
+
+def get_or_create_object(model, **kwargs):
+    return model.objects.get_or_create(**kwargs)
