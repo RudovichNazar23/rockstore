@@ -1,60 +1,44 @@
-from django.contrib import messages
 from django.shortcuts import render, redirect
-from django.views.generic.edit import View, UpdateView, DeleteView
+
+from django.views.generic.edit import View, UpdateView, DeleteView, CreateView
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 
 from .forms import CreatePostForm, CreateCommentForm
-from .models import Post, Category, Comment, Repost, Like
+from .models import Post, Comment, Repost, Like
 
 from common.services import create_object, get_queryset, get_object_data, check_is_anonymous_user, check_object_is_none, get_or_create_object
-from common.mixins import AuthorPermissionsMixin, RedirectMixin, IdentifyRequestUserMixin, LikePostMixin
+from common.mixins import AuthorPermissionsMixin, RedirectMixin, IdentifyRequestUserMixin, LikePostMixin, UserContextDataMixin, ContextDataMixin
 
 
-class CreatePostView(View):
+class CreatePostView(CreateView):
+    model = Post
+    form_class = CreatePostForm
     template_name = "post_app/create_post.html"
+    success_url = "../my_posts"
 
-    def get(self, request):
-        form = CreatePostForm()
-        return render(request=request, template_name=self.template_name, context={"form": form})
-
-    def post(self, request):
-        form = CreatePostForm(request.POST, request.FILES)
-
-        if form.is_valid():
-            create_object(model=Post, user=request.user, **form.cleaned_data)
-            return redirect("../my_posts/")
-        else:
-            messages.error(request, message="Something goes wrong...")
-            return redirect("../create_post/")
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
 
-class MyPostsListView(View):
+class MyPostsListView(UserContextDataMixin, ListView):
     model = Post
     template_name = "post_app/my_posts.html"
-
-    def get(self, request):
-        posts = get_queryset(self.model, user=request.user)
-        return render(request, template_name=self.template_name, context={"posts": posts})
+    context_object_name = "posts"
 
 
-class UserPostsView(IdentifyRequestUserMixin, View):
+class UserPostsView(IdentifyRequestUserMixin, UserContextDataMixin, ListView):
+    model = Post
     template_name = "post_app/user_posts.html"
     redirect_url = "../../my_posts/"
-
-    def get(self, request, id: int):
-        user_posts = get_queryset(model=Post, user=self.get_object())
-        return render(request=request, template_name=self.template_name, context={
-            "posts": user_posts,
-            "user": self.get_object(),
-        })
+    context_object_name = "posts"
 
 
-class PostView(View):
-    template_name = "post_app/post.html"
+class PostView(DetailView):
     model = Post
-
-    def get(self, request, pk: int):
-        post = get_object_data(model=self.model, pk=pk)
-        return render(request, template_name=self.template_name, context={"post": post})
+    template_name = "post_app/post.html"
+    context_object_name = "post"
 
 
 class UpdatePostView(AuthorPermissionsMixin, UpdateView):
@@ -84,13 +68,14 @@ class DeletePostView(AuthorPermissionsMixin, DeleteView):
     template_name = "post_app/delete_post.html"
 
 
-class CategoryPostListView(View):
+class CategoryPostListView(ContextDataMixin, ListView):
+    model = Post
     template_name = "post_app/posts_by_category.html"
+    context_object_name = "posts"
 
-    def get(self, request, category: str):
-        category = get_object_data(model=Category, name=category)
-        posts = get_queryset(model=Post, category__name=category)
-        return render(request, template_name=self.template_name, context={"posts": posts})
+    def get_object(self):
+        obj = get_queryset(model=self.model, category__name=self.kwargs["category"])
+        return obj
 
 
 class CreateCommentView(RedirectMixin, View):
@@ -122,12 +107,14 @@ class CreateCommentView(RedirectMixin, View):
         return url
 
 
-class PostCommentsView(View):
+class PostCommentsView(ContextDataMixin, ListView):
+    model = Comment
     template_name = "post_app/post_comments.html"
+    context_object_name = "comments"
 
-    def get(self, request, id: int):
-        post_comments = get_queryset(model=Comment, post=id)
-        return render(request=request, template_name=self.template_name, context={"comments": post_comments})
+    def get_object(self):
+        obj = get_queryset(model=self.model, post=self.kwargs["pk"])
+        return obj
 
 
 class UpdateCommentView(AuthorPermissionsMixin, UpdateView):
@@ -145,25 +132,17 @@ class DeleteCommentView(AuthorPermissionsMixin, DeleteView):
     success_url = "../../../my_comments/"
 
 
-class MyCommentsView(View):
-    template_name = "post_app/my_comments.html"
-
-    def get(self, request):
-        comments = get_queryset(Comment, user=request.user)
-        return render(request=request, template_name=self.template_name, context={"comments": comments})
-
-
-class UserCommentsView(IdentifyRequestUserMixin, View):
-    template_name = "post_app/user_comments.html"
-    redirect_url = "../../my_comments/"
+class MyCommentsView(UserContextDataMixin, ListView):
     model = Comment
+    template_name = "post_app/my_comments.html"
+    context_object_name = "comments"
 
-    def get(self, request, id: int):
-        user_comments = get_queryset(model=self.model, user=id)
-        return render(request=request, template_name=self.template_name, context={
-            "comments": user_comments,
-            "user": self.get_object(),
-        })
+
+class UserCommentsView(IdentifyRequestUserMixin, UserContextDataMixin, ListView):
+    model = Comment
+    template_name = "post_app/user_comments.html"
+    context_object_name = "comments"
+    redirect_url = "../../my_comments/"
 
 
 class CreateRepostView(RedirectMixin, View):
@@ -180,24 +159,17 @@ class CreateRepostView(RedirectMixin, View):
         return repost
 
 
-class MyRepostsView(View):
+class MyRepostsView(UserContextDataMixin, ListView):
+    model = Repost
     template_name = "post_app/my_reposts.html"
-
-    def get(self, request):
-        reposts = get_queryset(model=Repost, user=request.user)
-        return render(request=request, template_name=self.template_name, context={"posts": reposts})
+    context_object_name = "posts"
 
 
-class UserRepostsView(IdentifyRequestUserMixin, View):
+class UserRepostsView(IdentifyRequestUserMixin, UserContextDataMixin, ListView):
+    model = Repost
     template_name = "post_app/user_reposts.html"
+    context_object_name = "posts"
     redirect_url = "../../my_reposts/"
-
-    def get(self, request, id: int):
-        reposts = get_queryset(model=Repost, user=id)
-        return render(request=request, template_name=self.template_name, context={
-            "posts": reposts,
-            "user": self.get_object(),
-        })
 
 
 class DeleteRepostView(AuthorPermissionsMixin, DeleteView):

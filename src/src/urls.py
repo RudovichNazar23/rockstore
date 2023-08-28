@@ -23,8 +23,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("registration_app.urls")),
     path("accounts/", include("allauth.urls")),
-    path("user_profile/", include("user_profile_app.urls")),
-    path("posts/", include("post_app.urls")),
+    path("user_profile/", include("user_profile_app.urls", namespace="user_profile")),
+    path("posts/", include("post_app.urls", namespace="posts")),
     path("chat_rooms/", include("chat_app.urls")),
     path("common/", include("common.urls")),
 ] + static(

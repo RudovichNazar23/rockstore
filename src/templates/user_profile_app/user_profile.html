@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block link_posts %}
-    <a class="nav-link active" href="../../posts/user_posts/{{ user.id }}/"> Posts</a>
+    <a class="nav-link active" href="../../posts/user_posts/{{ user.pk }}/"> Posts</a>
 {% endblock %}
 
 {% block repost_link %}
@@ -47,7 +47,7 @@
 {% endblock %}
 
 {% block customize_profile %}
-    <a href="">
+    <a href="" class="btn btn-info">
         Write a message
     </a>
 {% endblock %}

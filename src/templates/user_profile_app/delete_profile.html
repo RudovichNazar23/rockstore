@@ -3,5 +3,5 @@
 {% block form_title %} Delete Profile  {{ profile.user }}{% endblock %}
 {% block form_content %} Are you sure that you want to delete your profile ? {% endblock %}
 {% block cancel_link %}
-    <a href="../../my_profile" class="btn btn-light"> Cancel </a>
+    <a href="{% url 'user_profile:my_profile' %}" class="btn btn-light"> Cancel </a>
 {% endblock %}

@@ -3,7 +3,7 @@
 {% load widget_tweaks %}
 
 {% block content %}
-    <form class="signup" method="post" action="../create_profile/" enctype="multipart/form-data">
+    <form class="signup" method="post" action="{% url 'user_profile:create_profile' %}" enctype="multipart/form-data">
       {% csrf_token %}
        <ul class="wrapper">
            {% for field in form %}

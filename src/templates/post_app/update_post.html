@@ -3,9 +3,6 @@
 {% load widget_tweaks %}
 
 {% block auth_user_content %}
-    {% if permission_denied_message %}
-
-    {% else %}
         <div class="container d-flex align-items-center justify-content-center mt-4 p-2 rounded" style="background-color: whitesmoke; height: 1000px;">
             <form action="../../update_post/{{ post.pk }}/" method="post" enctype="multipart/form-data" class="">{% csrf_token %}
                 {% for field in form %}
@@ -19,5 +16,4 @@
                 </div>
             </form>
         </div>
-    {% endif %}
 {% endblock %}

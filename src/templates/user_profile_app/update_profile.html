@@ -3,7 +3,7 @@
 {% load widget_tweaks %}
 
 {% block content %}
-    <form action="../../update_profile/{{ user.pk }}/" method="post" enctype="multipart/form-data">{% csrf_token %}
+    <form action="{% url 'user_profile:update_profile' user.pk %}" method="post" enctype="multipart/form-data">{% csrf_token %}
         <ul class="wrapper">
            {% for field in form %}
                 <li class="form-row">
