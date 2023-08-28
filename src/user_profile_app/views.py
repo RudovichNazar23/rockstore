@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.views.generic.edit import View, UpdateView, DeleteView
+
+from django.views.generic.edit import View, UpdateView, DeleteView, CreateView
+from django.views.generic.detail import DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import UserProfile
 from .forms import UserProfileForm
@@ -9,32 +11,33 @@ from common.services import get_object_data, create_object, check_object_is_none
 from common.mixins import AuthorPermissionsMixin, RedirectMixin, IdentifyRequestUserMixin
 
 
-@login_required
-def my_profile_view(request):
-    user_profile_data = get_object_data(model=UserProfile, user=request.user)
-    return render(request, "user_profile_app/my_profile.html", {
-        "user_profile_info": user_profile_data,
-    })
+class MyProfileView(LoginRequiredMixin, DetailView):
+    template_name = "user_profile_app/my_profile.html"
+    context_object_name = "user_profile_info"
+
+    def get_object(self, queryset=None):
+        obj = get_object_data(model=UserProfile, user=self.request.user)
+        return obj
 
 
-class UserProfileView(IdentifyRequestUserMixin, View):
-    template_name = "user_profile_app/user_profile.html"
+class UserProfileView(IdentifyRequestUserMixin, DetailView):
     model = UserProfile
+    template_name = "user_profile_app/user_profile.html"
     redirect_url = "../my_profile/"
+    context_object_name = "profile"
 
-    def get(self, request, id: int):
-        profile = get_object_data(model=self.model, user=self.get_object())
-        return render(request=request, template_name=self.template_name, context={
-            "user": self.get_object(),
-            "profile": profile
-        })
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["user"] = self.get_object()
+        context["profile"] = get_object_data(model=self.model, user=context["user"])
+        return context
 
 
 class CreateProfileView(RedirectMixin, View):
+    model = UserProfile
     form = UserProfileForm()
     template_name = "user_profile_app/create_profile.html"
     success_url = "../my_profile/"
-    model = UserProfile
     redirect_url = "../my_profile/"
 
     def get(self, request):

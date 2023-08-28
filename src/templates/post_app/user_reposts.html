@@ -21,6 +21,12 @@
     <a class="title" href="">{{ post.post.title }}</a>
 {% endblock %}
 
+{% block post_owner %}
+    <a class="" href="../../../user_profile/{{ post.post.user.pk }}/">
+        {{ post.post.user }}
+    </a>
+{% endblock %}
+
 {% block content %}
     <hr>
     <div class="d-flex flex-row align-items-start justify-content-between">

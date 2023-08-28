@@ -1,7 +1,7 @@
 from django.http import Http404, HttpResponseRedirect
 from django.contrib.auth.models import User
 
-from .services import check_object_is_none, get_object_data, get_or_create_object
+from .services import check_object_is_none, get_object_data, get_or_create_object, get_queryset
 
 
 class BaseRedirectMixin:
@@ -14,7 +14,7 @@ class BaseRedirectMixin:
         return self.redirect_url
 
     def get_object(self):
-        user = get_object_data(model=User, id=self.kwargs["id"])
+        user = get_object_data(model=User, id=self.kwargs["pk"])
         return user
 
 
@@ -81,3 +81,27 @@ class LikePostMixin:
         return self.redirect_url
 
 
+class UserContextDataMixin:
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["user"] = self.get_user()
+        context[self.context_object_name] = self.get_user()
+        return context
+
+    def get_user(self):
+        user = None
+        if not self.kwargs:
+            user = self.request.user
+        else:
+            user = self.get_object()
+        return get_queryset(model=self.model, user=user)
+
+
+class ContextDataMixin:
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context[self.context_object_name] = self.get_object()
+        return context
+
+    def get_object(self):
+        return self
