@@ -1,6 +1,12 @@
 {% extends 'templates/post_list.html' %}
 {% load static %}
 
+{% block back_link %}
+    <a class="btn btn-dark m-3" href="/" style="position: fixed;">
+        Back
+    </a>
+{% endblock %}
+
 {% block message %}
     <h2 class="text-center mt-5">
         There aren't any posts with this category...
