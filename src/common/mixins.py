@@ -85,16 +85,18 @@ class UserContextDataMixin:
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context["user"] = self.get_user()
-        context[self.context_object_name] = self.get_user()
+        context[self.context_object_name] = self.get_data()
         return context
 
     def get_user(self):
-        user = None
         if not self.kwargs:
             user = self.request.user
         else:
             user = self.get_object()
-        return get_queryset(model=self.model, user=user)
+        return user
+
+    def get_data(self):
+        return get_queryset(model=self.model, user=self.get_user())
 
 
 class ContextDataMixin:
