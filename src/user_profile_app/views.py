@@ -8,7 +8,7 @@ from .models import UserProfile
 from .forms import UserProfileForm
 
 from common.services import get_object_data, create_object, check_object_is_none
-from common.mixins import AuthorPermissionsMixin, RedirectMixin, IdentifyRequestUserMixin
+from common.mixins import AuthorPermissionsMixin, RedirectMixin, IdentifyRequestUserMixin, UserContextDataMixin
 
 
 class MyProfileView(LoginRequiredMixin, DetailView):
@@ -20,7 +20,7 @@ class MyProfileView(LoginRequiredMixin, DetailView):
         return obj
 
 
-class UserProfileView(IdentifyRequestUserMixin, DetailView):
+class UserProfileView(LoginRequiredMixin, IdentifyRequestUserMixin, DetailView):
     model = UserProfile
     template_name = "user_profile_app/user_profile.html"
     redirect_url = "../my_profile/"
@@ -33,7 +33,7 @@ class UserProfileView(IdentifyRequestUserMixin, DetailView):
         return context
 
 
-class CreateProfileView(RedirectMixin, View):
+class CreateProfileView(LoginRequiredMixin, RedirectMixin, View):
     model = UserProfile
     form = UserProfileForm()
     template_name = "user_profile_app/create_profile.html"
@@ -59,7 +59,7 @@ class CreateProfileView(RedirectMixin, View):
         return profile
 
 
-class UpdateProfileView(AuthorPermissionsMixin, UpdateView):
+class UpdateProfileView(LoginRequiredMixin, AuthorPermissionsMixin, UpdateView):
     model = UserProfile
     template_name = "user_profile_app/update_profile.html"
     fields = ["profile_photo", "country", "about"]
@@ -67,7 +67,7 @@ class UpdateProfileView(AuthorPermissionsMixin, UpdateView):
     context_object_name = "user"
 
 
-class DeleteProfileView(AuthorPermissionsMixin, DeleteView):
+class DeleteProfileView(LoginRequiredMixin, AuthorPermissionsMixin, DeleteView):
     model = UserProfile
     template_name = "user_profile_app/delete_profile.html"
     context_object_name = "profile"

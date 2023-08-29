@@ -79,8 +79,8 @@ class CategoryPostListView(ContextDataMixin, ListView):
 
 
 class CreateCommentView(RedirectMixin, View):
+    model = Comment
     template_name = "post_app/create_comment.html"
-    model = Post
 
     def get(self, request, id: int):
         form = CreateCommentForm()
@@ -152,7 +152,7 @@ class CreateRepostView(RedirectMixin, View):
     def post(self, request, id: int):
         post = get_object_data(model=Post, id=id)
         create_object(model=Repost, user=request.user, post=post)
-        return redirect("/")
+        return redirect(self.request.META.get("HTTP_REFERER"))
 
     def get_object(self):
         repost = get_object_data(model=self.model, post=self.kwargs["id"], user=self.request.user)
