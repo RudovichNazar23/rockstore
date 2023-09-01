@@ -34,7 +34,7 @@
                 <button type="submit" class="btn btn-danger p-2 m-1">{{ post.liked.all.count }} likes</button>
             {% endif %}
         </form>
-        <a class="btn btn-light p-2 m-1" href="">30 Reposts</a>
+        <a class="btn btn-light p-2 m-1">{{ post.reposts.all.count }} Reposts</a>
     </div>
 {% endblock %}
 

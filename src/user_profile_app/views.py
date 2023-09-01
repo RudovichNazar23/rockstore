@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 
-from django.views.generic.edit import View, UpdateView, DeleteView, CreateView
+from django.views.generic.edit import View, UpdateView, DeleteView
 from django.views.generic.detail import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -8,7 +8,9 @@ from .models import UserProfile
 from .forms import UserProfileForm
 
 from common.services import get_object_data, create_object, check_object_is_none
-from common.mixins import AuthorPermissionsMixin, RedirectMixin, IdentifyRequestUserMixin, UserContextDataMixin
+
+from common.mixins import AuthorPermissionsMixin
+from common.redirect_mixins import RedirectMixin, IdentifyRequestUserMixin
 
 
 class MyProfileView(LoginRequiredMixin, DetailView):

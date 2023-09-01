@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 
+from django.http import HttpResponseRedirect
+
 from django.views.generic.edit import View, UpdateView, DeleteView, CreateView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -8,7 +10,10 @@ from .forms import CreatePostForm, CreateCommentForm
 from .models import Post, Comment, Repost, Like
 
 from common.services import create_object, get_queryset, get_object_data, check_is_anonymous_user, check_object_is_none, get_or_create_object
-from common.mixins import AuthorPermissionsMixin, RedirectMixin, IdentifyRequestUserMixin, LikePostMixin, UserContextDataMixin, ContextDataMixin
+from common.mixins import AuthorPermissionsMixin, LikePostMixin
+
+from common.context_data_mixins import UserContextDataMixin, ContextDataMixin
+from common.redirect_mixins import RedirectMixin, IdentifyRequestUserMixin
 
 
 class CreatePostView(CreateView):
@@ -151,7 +156,8 @@ class CreateRepostView(RedirectMixin, View):
 
     def post(self, request, id: int):
         post = get_object_data(model=Post, id=id)
-        create_object(model=Repost, user=request.user, post=post)
+        create_object(model=self.model, user=request.user, post=post)
+        post.reposts.add(self.request.user)
         return redirect(self.request.META.get("HTTP_REFERER"))
 
     def get_object(self):
@@ -177,6 +183,11 @@ class DeleteRepostView(AuthorPermissionsMixin, DeleteView):
     template_name = "post_app/delete_repost.html"
     context_object_name = "repost"
     success_url = "../../my_reposts/"
+
+    def form_valid(self, form):
+        self.object.post.reposts.remove(self.request.user)
+        self.object.delete()
+        return HttpResponseRedirect(self.success_url)
 
 
 class LikePostView(LikePostMixin, View):
