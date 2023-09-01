@@ -31,6 +31,7 @@ class Post(models.Model):
     possibility_of_exchange = models.CharField(choices=CHOICES)
     description = models.TextField()
     liked = models.ManyToManyField(to=User, default=None, blank=True)
+    reposts = models.ManyToManyField(to=User, default=None, blank=True, related_name="reposts")
     active = models.CharField(choices=CHOICES, default="Yes")
     date_created = models.DateTimeField(auto_now=True)
 
