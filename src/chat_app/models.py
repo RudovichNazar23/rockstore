@@ -6,6 +6,9 @@ class ChatRoom(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="chat_creator")
     member = models.ForeignKey(User, on_delete=models.CASCADE, related_name="chat_member")
 
+    def __str__(self):
+        return f"{self.creator} - {self.member}"
+
 
 class Message(models.Model):
     chatroom = models.ForeignKey(ChatRoom, on_delete=models.CASCADE)

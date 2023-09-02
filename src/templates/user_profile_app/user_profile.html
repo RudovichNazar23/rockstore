@@ -47,9 +47,10 @@
 {% endblock %}
 
 {% block customize_profile %}
-    <a href="" class="btn btn-info">
-        Write a message
-    </a>
+    <form action="../../chat_rooms/create_chat_room/{{ user.pk }}/" method="POST">{% csrf_token %}
+        <input type="submit" value="Create Chat Room">
+    </form>
+    {{ user.pk }}
 {% endblock %}
 
 {% block about %}
