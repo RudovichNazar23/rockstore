@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from .services import get_object_data, check_object_is_none
 
 from django.contrib.auth.models import User
@@ -24,6 +24,15 @@ class RedirectMixin(BaseRedirectMixin):
         obj = self.get_object()
         if not check_object_is_none(obj):
             return HttpResponseRedirect(redirect_to=self.get_redirect_url())
+        else:
+            return super().dispatch(request, *args, **kwargs)
+
+
+class ChatRedirectMixin(BaseRedirectMixin):
+    def dispatch(self, request, *args, **kwargs):
+        if get_object_data(model=self.model, author=self.request.user, member=self.get_object()) or \
+                get_object_data(model=self.model, author=self.get_object(), member=self.request.user):
+            return Http404()
         else:
             return super().dispatch(request, *args, **kwargs)
 
