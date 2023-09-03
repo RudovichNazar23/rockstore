@@ -12,6 +12,11 @@ class AuthorPermissionsMixin:
         return super().dispatch(request, *args, **kwargs)
 
 
+class ChatMemberMixin(AuthorPermissionsMixin):
+    def has_permissions(self):
+        return self.request.user in (self.get_object().creator, self.get_object().member)
+
+
 class LikePostMixin:
     redirect_url = "/"
     model = None

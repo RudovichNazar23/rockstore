@@ -6,6 +6,9 @@ from django.views.generic.edit import View, UpdateView, DeleteView, CreateView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+
 from .forms import CreatePostForm, CreateCommentForm
 from .models import Post, Comment, Repost, Like
 
@@ -16,7 +19,7 @@ from common.context_data_mixins import UserContextDataMixin, ContextDataMixin
 from common.redirect_mixins import RedirectMixin, IdentifyRequestUserMixin
 
 
-class CreatePostView(CreateView):
+class CreatePostView(LoginRequiredMixin, CreateView):
     model = Post
     form_class = CreatePostForm
     template_name = "post_app/create_post.html"
@@ -27,13 +30,13 @@ class CreatePostView(CreateView):
         return super().form_valid(form)
 
 
-class MyPostsListView(UserContextDataMixin, ListView):
+class MyPostsListView(LoginRequiredMixin, UserContextDataMixin, ListView):
     model = Post
     template_name = "post_app/my_posts.html"
     context_object_name = "posts"
 
 
-class UserPostsView(IdentifyRequestUserMixin, UserContextDataMixin, ListView):
+class UserPostsView(LoginRequiredMixin, IdentifyRequestUserMixin, UserContextDataMixin, ListView):
     model = Post
     template_name = "post_app/user_posts.html"
     redirect_url = "../../my_posts/"
@@ -46,7 +49,7 @@ class PostView(DetailView):
     context_object_name = "post"
 
 
-class UpdatePostView(AuthorPermissionsMixin, UpdateView):
+class UpdatePostView(LoginRequiredMixin, AuthorPermissionsMixin, UpdateView):
     model = Post
     fields = [
         "title",
@@ -66,14 +69,14 @@ class UpdatePostView(AuthorPermissionsMixin, UpdateView):
     permission_denied_message = "Error"
 
 
-class DeletePostView(AuthorPermissionsMixin, DeleteView):
+class DeletePostView(LoginRequiredMixin, AuthorPermissionsMixin, DeleteView):
     model = Post
     context_object_name = "post"
     success_url = "../../my_posts"
     template_name = "post_app/delete_post.html"
 
 
-class CategoryPostListView(ContextDataMixin, ListView):
+class CategoryPostListView(LoginRequiredMixin, ContextDataMixin, ListView):
     model = Post
     template_name = "post_app/posts_by_category.html"
     context_object_name = "posts"
@@ -83,7 +86,7 @@ class CategoryPostListView(ContextDataMixin, ListView):
         return obj
 
 
-class CreateCommentView(RedirectMixin, View):
+class CreateCommentView(LoginRequiredMixin, RedirectMixin, View):
     model = Comment
     template_name = "post_app/create_comment.html"
 
@@ -112,7 +115,7 @@ class CreateCommentView(RedirectMixin, View):
         return url
 
 
-class PostCommentsView(ContextDataMixin, ListView):
+class PostCommentsView(LoginRequiredMixin, ContextDataMixin, ListView):
     model = Comment
     template_name = "post_app/post_comments.html"
     context_object_name = "comments"
@@ -122,7 +125,7 @@ class PostCommentsView(ContextDataMixin, ListView):
         return obj
 
 
-class UpdateCommentView(AuthorPermissionsMixin, UpdateView):
+class UpdateCommentView(LoginRequiredMixin, AuthorPermissionsMixin, UpdateView):
     model = Comment
     template_name = "post_app/update_comment.html"
     fields = ["description"]
@@ -130,27 +133,27 @@ class UpdateCommentView(AuthorPermissionsMixin, UpdateView):
     success_url = "../../../my_comments/"
 
 
-class DeleteCommentView(AuthorPermissionsMixin, DeleteView):
+class DeleteCommentView(LoginRequiredMixin, AuthorPermissionsMixin, DeleteView):
     model = Comment
     context_object_name = "comment"
     template_name = "post_app/delete_comment.html"
     success_url = "../../../my_comments/"
 
 
-class MyCommentsView(UserContextDataMixin, ListView):
+class MyCommentsView(LoginRequiredMixin, UserContextDataMixin, ListView):
     model = Comment
     template_name = "post_app/my_comments.html"
     context_object_name = "comments"
 
 
-class UserCommentsView(IdentifyRequestUserMixin, UserContextDataMixin, ListView):
+class UserCommentsView(LoginRequiredMixin, IdentifyRequestUserMixin, UserContextDataMixin, ListView):
     model = Comment
     template_name = "post_app/user_comments.html"
     context_object_name = "comments"
     redirect_url = "../../my_comments/"
 
 
-class CreateRepostView(RedirectMixin, View):
+class CreateRepostView(LoginRequiredMixin, RedirectMixin, View):
     model = Repost
     redirect_url = "../../../my_reposts/"
 
@@ -165,20 +168,20 @@ class CreateRepostView(RedirectMixin, View):
         return repost
 
 
-class MyRepostsView(UserContextDataMixin, ListView):
+class MyRepostsView(LoginRequiredMixin, UserContextDataMixin, ListView):
     model = Repost
     template_name = "post_app/my_reposts.html"
     context_object_name = "posts"
 
 
-class UserRepostsView(IdentifyRequestUserMixin, UserContextDataMixin, ListView):
+class UserRepostsView(LoginRequiredMixin, IdentifyRequestUserMixin, UserContextDataMixin, ListView):
     model = Repost
     template_name = "post_app/user_reposts.html"
     context_object_name = "posts"
     redirect_url = "../../my_reposts/"
 
 
-class DeleteRepostView(AuthorPermissionsMixin, DeleteView):
+class DeleteRepostView(LoginRequiredMixin, AuthorPermissionsMixin, DeleteView):
     model = Repost
     template_name = "post_app/delete_repost.html"
     context_object_name = "repost"
@@ -190,7 +193,7 @@ class DeleteRepostView(AuthorPermissionsMixin, DeleteView):
         return HttpResponseRedirect(self.success_url)
 
 
-class LikePostView(LikePostMixin, View):
+class LikePostView(LoginRequiredMixin, LikePostMixin, View):
     model = Post
 
     def post(self, request, id: int):

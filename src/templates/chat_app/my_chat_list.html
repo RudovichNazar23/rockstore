@@ -1,0 +1,24 @@
+{% extends 'templates/base.html' %}
+
+{% block auth_user_content %}
+    <div class="d-flex flex-column m-auto mt-5 p-1 border">
+        {% for chat_room in chats %}
+        <a href="" style="text-decoration: none; color: black;">
+            <div class="d-flex flex-column p-2" style="" >
+                <div class="d-flex flex-row align-items-start justify-content-between">
+                    <div class="p-2 m-2">
+                        {{ chat_room.member }}
+                    </div>
+                    <div class="p-2 m-2">Time</div>
+                </div>
+                <div class="text-center p-2 m-2">Last Message</div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+
+
+
+
