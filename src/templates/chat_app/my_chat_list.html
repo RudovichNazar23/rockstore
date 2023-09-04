@@ -1,21 +1,36 @@
 {% extends 'templates/base.html' %}
+{% load static %}
+
+{% block head_links %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/post_title_animation.css' %}">
+{% endblock %}
 
 {% block auth_user_content %}
-    <div class="d-flex flex-column m-auto mt-5 p-1 border">
-        {% for chat_room in chats %}
-        <a href="" style="text-decoration: none; color: black;">
-            <div class="d-flex flex-column p-2" style="" >
-                <div class="d-flex flex-row align-items-start justify-content-between">
-                    <div class="p-2 m-2">
-                        {{ chat_room.member }}
-                    </div>
-                    <div class="p-2 m-2">Time</div>
+<a class="position-fixed btn btn-dark ms-3" href="/">
+    Back
+</a>
+
+<div class="container d-flex flex-column mt-5 p-2">
+    {% for chat in chats %}
+            <div class="d-flex flex-column align-items-center border m-2" style="height: 150px;">
+                {% if request.user == chat.creator %}
+                    <h4 class="mt-2">
+                        <a class="title" href="../room/{{ chat.pk }}/">{{ chat.member }}</a>
+                    </h4>
+                {% else %}
+                    <h4 class="mt-1">
+                        <a class="title" href="../room/{{ chat.pk }}/">{{ chat.creator }}</a>
+                    </h4>
+                {% endif %}
+                <div>
+                    <hr>
+                    <a class="btn btn-danger btn-block" href="../delete_chat_room/{{ chat.pk }}/">
+                        Delete
+                    </a>
                 </div>
-                <div class="text-center p-2 m-2">Last Message</div>
             </div>
-        </a>
-        {% endfor %}
-    </div>
+    {% endfor %}
+</div>
 {% endblock %}
 
 
