@@ -1,10 +1,14 @@
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.http import HttpResponse
+
+from itertools import chain
 
 from django.views import View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
+from django.views.generic.edit import DeleteView
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
@@ -45,9 +49,14 @@ class MyChatroomListView(LoginRequiredMixin, UserContextDataMixin, ListView):
     template_name = "chat_app/my_chat_list.html"
 
     def get_data(self):
-        return get_queryset(model=self.model, creator=self.request.user) \
-            or get_queryset(model=self.model, member=self.request)
+        chats = chain(get_queryset(model=self.model, creator=self.request.user),
+                      get_queryset(model=self.model, member=self.request.user)
+                      )
+        return chats
 
 
-class DeleteChatRoomView:
-    pass
+class DeleteChatRoomView(LoginRequiredMixin, ChatMemberMixin, DeleteView):
+    model = ChatRoom
+    template_name = "chat_app/delete_chat.html"
+    context_object_name = "chat"
+    success_url = "/"

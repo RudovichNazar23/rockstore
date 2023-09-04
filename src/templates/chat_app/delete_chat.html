@@ -1,0 +1,17 @@
+{% extends 'templates/delete.html' %}
+
+{% block form_title %}
+    Delete Chat room
+{% endblock %}
+
+{% block form_content %}
+    {% if request.user == chat.creator %}
+        Are you sure that you want to delete chat with <a href="../../../user_profile/{{ chat.member.pk }}">{{ chat.member }}</a>
+    {% else %}
+        Are you sure that you want to delete chat with <a href="../../../user_profile/{{ chat.member.pk }}">{{ chat.creator }}</a>
+    {% endif %}
+{% endblock %}
+
+{% block cancel_link %}
+    <a class="btn btn-light" href="../../my_chat_rooms">Cancel</a>
+{% endblock %}
