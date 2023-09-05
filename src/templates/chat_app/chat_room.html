@@ -4,37 +4,33 @@
 <head>
     <meta charset="UTF-8">
     <title>Room</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'chat_app/css/chat_room.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-    <div class="">
-        <a href="/rooms/rooms">
-            <button class="btn btn-primary rounded-xl btn-block m-3">
-                Back
-            </button>
-        </a>
-    </div>
-    <div class="p-10 lg:p-20 text-center">
-        <h1 class="text-3xl lg:text-6xl text-white">{{ room.creator }} - {{ room.member }}</h1>
-    </div>
-
-    <div class="lg:w-2/4 mx-4 lg:mx-auto p-4 bg-white rounded-xl">
-        <div class="chat-messages space-y-3" id="chat-messages">
-            {% for m in messages %}<b>{{ m.author.username }}</b>: {{ m.content }}<br>{% endfor %}
+    <a class="btn btn-dark m-5 position-static" href="../../my_chat_rooms/">
+      Back
+    </a>
+    <div class="container d-flex flex-column border rounded align-items-center">
+        <div class="text-center p-4 d-flex align-items-center justify-content-center">
+            <h3>Chat</h3>
         </div>
-    </div>
-
-    <div class="lg:w-2/4 mt-6 mx-4 lg:mx-auto p-4 bg-white rounded-xl">
-        <form method="post" action="." class="flex">
-            <input type="text" name="content" class="flex-1 mr-3" placeholder="Your message..." id="chat-message-input">
-
-            <button
-                class="px-5 py-3 rounded-xl text-white bg-teal-600 hover:bg-teal-700"
-                id="chat-message-submit"
-            >Submit</button>
-        </form>
+    <hr>
+        <div class="lg:w-2/4 mx-4 lg:mx-auto p-4 bg-white rounded-xl" style="width: 100%;">
+            <div class="chat-messages space-y-3 border rounded p-3" id="chat-messages" style="width: 100%; height:350px;">
+                {% for m in messages %}<b>{{ m.author.username }}</b>: {{ m.content }}<br>{% endfor %}
+            </div>
+        </div>
+        <div class="lg:w-2/4 mt-6 mx-4 lg:mx-auto p-4 bg-white rounded-xl">
+            <form method="post" action="." class="d-flex">
+                <input type="text" name="content" class="flex-1 mr-3 form-control" placeholder="Your message..." id="chat-message-input">
+                <button
+                    class="px-5 py-3 rounded-xl text-white bg-teal-600 hover:bg-teal-700"
+                    id="chat-message-submit"
+                >Submit</button>
+            </form>
+        </div>
     </div>
 
     {{ room.pk|json_script:"json-pk" }}
