@@ -48,9 +48,8 @@
 
 {% block customize_profile %}
     <form action="../../chat_rooms/create_chat_room/{{ user.pk }}/" method="POST">{% csrf_token %}
-        <input type="submit" value="Create Chat Room">
+        <input type="submit" value="Write a message" class="btn btn-success">
     </form>
-    {{ user.pk }}
 {% endblock %}
 
 {% block about %}
