@@ -29,7 +29,7 @@ class CreateChatRoomView(LoginRequiredMixin, ChatRedirectMixin, View):
     def post(self, request, pk: int):
         member = get_object_data(model=User, pk=pk)
         create_object(model=self.model, creator=self.request.user, member=member)
-        return redirect("/")
+        return redirect("/chat_rooms/my_chat_rooms/")
 
 
 class ChatRoomView(LoginRequiredMixin, ChatMemberMixin, DetailView):
@@ -59,4 +59,4 @@ class DeleteChatRoomView(LoginRequiredMixin, ChatMemberMixin, DeleteView):
     model = ChatRoom
     template_name = "chat_app/delete_chat.html"
     context_object_name = "chat"
-    success_url = "/"
+    success_url = "/chat_rooms/my_chat_rooms/"

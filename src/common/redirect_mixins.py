@@ -30,9 +30,9 @@ class RedirectMixin(BaseRedirectMixin):
 
 class ChatRedirectMixin(BaseRedirectMixin):
     def dispatch(self, request, *args, **kwargs):
-        if get_object_data(model=self.model, author=self.request.user, member=self.get_object()) or \
-                get_object_data(model=self.model, author=self.get_object(), member=self.request.user):
-            return Http404()
+        if get_object_data(model=self.model, creator=self.request.user, member=self.get_object()) or \
+                get_object_data(model=self.model, creator=self.get_object(), member=self.request.user):
+            return HttpResponseRedirect(redirect_to="/chat_rooms/my_chat_rooms/")
         else:
             return super().dispatch(request, *args, **kwargs)
 
