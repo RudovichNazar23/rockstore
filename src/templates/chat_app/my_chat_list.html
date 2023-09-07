@@ -6,11 +6,12 @@
 {% endblock %}
 
 {% block auth_user_content %}
-<a class="position-fixed btn btn-dark ms-3" href="/">
-    Back
-</a>
+    <a class="position-fixed btn btn-dark ms-3" href="/">
+        Back
+    </a>
 
-<div class="container d-flex flex-column mt-5 p-2">
+
+<div class="container d-flex flex-column mt-5 p-2" id="container">
     {% for chat in chats %}
             <div class="d-flex flex-column align-items-center border m-2" style="height: 150px;">
                 {% if request.user == chat.creator %}
@@ -31,6 +32,9 @@
             </div>
     {% endfor %}
 </div>
+
+<script src="{% static 'js/chat_list.js' %}">
+</script>
 {% endblock %}
 
 
