@@ -11,7 +11,7 @@
             <div class="container d-flex align-items-center align-content-between flex-column bg-light border border-top-0" style="width: 400px;">
                 {% for category in categories %}
                     <div class="container text-center rounded p-2 m-2" id="cards" style="width: 200px;">
-                        <a class="btn btn-primary m-2 p-2" style="width: 100%;" href="posts/category/{{ category.name }}">{{ category.name }}</a>
+                        <a class="btn btn-primary m-2 p-2" data-class="panel"  style="width: 100%;" href="posts/category/{{ category.name }}">{{ category.name }}</a>
                     </div>
                 {% endfor %}
             </div>
@@ -51,16 +51,16 @@
             </div>
             <div class="container d-flex align-items-center flex-column bg-light border border-top-0" style="width: 400px;">
                 <div class="container text-center rounded p-2 m-2" style="width: 200px;">
-                    <a class="btn btn-primary m-2 p-2" style="width: 100%;" href="{% url 'user_profile:my_profile' %}">My profile</a>
+                    <a class="btn btn-primary m-2 p-2" data-class="panel"  style="width: 100%;" href="{% url 'user_profile:my_profile' %}">My profile</a>
                 </div>
                <div class="container text-center rounded p-2 m-2" style="width: 200px;">
-                    <a class="btn btn-primary m-2 p-2" style="width: 100%;" href="posts/create_post">Create post</a>
+                    <a class="btn btn-primary m-2 p-2" data-class="panel" style="width: 100%;" href="posts/create_post">Create post</a>
                 </div>
                 <div class="container text-center rounded p-2 m-2" style="width: 200px;">
-                    <a class="btn btn-primary m-2 p-2" style="width: 100%;" href="chat_rooms/my_chat_rooms/">Chats</a>
+                    <a class="btn btn-primary m-2 p-2" data-class="panel" style="width: 100%;" href="chat_rooms/my_chat_rooms/">Chats</a>
                 </div>
                 <div class="container  text-center rounded p-2 m-2" style="width: 200px;">
-                    <a href="logout" class="btn btn-primary m-2 p-2" style="width: 100%;">Logout</a>
+                    <a href="logout" class="btn btn-primary m-2 p-2" data-class="panel" style="width: 100%;">Logout</a>
                 </div>
             </div>
         </div>

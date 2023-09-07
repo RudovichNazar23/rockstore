@@ -16,7 +16,7 @@ from .models import ChatRoom, Message
 
 from common.services import get_object_data, create_object, get_queryset
 from common.redirect_mixins import ChatRedirectMixin
-from common.mixins import ChatMemberMixin
+from common.permission_mixins import ChatMemberMixin
 from common.context_data_mixins import UserContextDataMixin
 
 

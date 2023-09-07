@@ -19,7 +19,11 @@
     <hr>
         <div class="lg:w-2/4 mx-4 lg:mx-auto p-4 bg-white rounded-xl" style="width: 100%;">
             <div class="chat-messages space-y-3 border rounded p-3" id="chat-messages" style="width: 100%; height:350px;">
-                {% for m in messages %}<b>{{ m.author.username }}</b>: {{ m.content }}<br>{% endfor %}
+                {% for m in messages %}
+                    {% if m.content %}
+                        <b>{{ m.author.username }}</b>: {{ m.content }}<br>
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
         <div class="lg:w-2/4 mt-6 mx-4 lg:mx-auto p-4 bg-white rounded-xl">
@@ -36,7 +40,7 @@
     {{ room.pk|json_script:"json-pk" }}
     {{ request.user.username|json_script:"json-username" }}
 
-<script src="{% static 'js/chat_room.js' %}">
-</script>
+    <script src="{% static 'js/chat_room.js' %}">
+    </script>
 </body>
 </html>

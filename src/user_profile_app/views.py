@@ -9,7 +9,7 @@ from .forms import UserProfileForm
 
 from common.services import get_object_data, create_object, check_object_is_none
 
-from common.mixins import AuthorPermissionsMixin
+from common.permission_mixins import AuthorPermissionsMixin
 from common.redirect_mixins import RedirectMixin, IdentifyRequestUserMixin
 
 
@@ -25,7 +25,7 @@ class MyProfileView(LoginRequiredMixin, DetailView):
 class UserProfileView(LoginRequiredMixin, IdentifyRequestUserMixin, DetailView):
     model = UserProfile
     template_name = "user_profile_app/user_profile.html"
-    redirect_url = "../my_profile/"
+    redirect_url = "/user_profile/my_profile/"
     context_object_name = "profile"
 
     def get_context_data(self, **kwargs):
@@ -39,8 +39,8 @@ class CreateProfileView(LoginRequiredMixin, RedirectMixin, View):
     model = UserProfile
     form = UserProfileForm()
     template_name = "user_profile_app/create_profile.html"
-    success_url = "../my_profile/"
-    redirect_url = "../my_profile/"
+    success_url = "/user_profile/my_profile/"
+    redirect_url = "/user_profile/my_profile/"
 
     def get(self, request):
         return render(request, self.template_name, {
@@ -65,7 +65,7 @@ class UpdateProfileView(LoginRequiredMixin, AuthorPermissionsMixin, UpdateView):
     model = UserProfile
     template_name = "user_profile_app/update_profile.html"
     fields = ["profile_photo", "country", "about"]
-    success_url = "../../my_profile"
+    success_url = "/user_profile/my_profile/"
     context_object_name = "user"
 
 
@@ -73,4 +73,4 @@ class DeleteProfileView(LoginRequiredMixin, AuthorPermissionsMixin, DeleteView):
     model = UserProfile
     template_name = "user_profile_app/delete_profile.html"
     context_object_name = "profile"
-    success_url = "../../my_profile"
+    success_url = "/user_profile/my_profile/"
