@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:10.1-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+  web:
+    build: .
+    command: python /usr/project/rockstore/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/usr/project/rockstore
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
+
+
+
+
+
