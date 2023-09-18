@@ -14,7 +14,11 @@ services:
   db:
     image: postgres:12-alpine
     container_name: db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
     environment:
       - POSTGRES_DB=rockstore_project
       - POSTGRES_USER=rockstore_user
       - POSTGRES_PASSWORD=rockstore_project_31
+volumes:
+  postgres_data:
