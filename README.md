@@ -15,3 +15,4 @@ There are different categories of musical stuff:
   - Saxophone
   - Other (For exceptional cases, for instance, if you have Jimi's Hendrix pick :) )
 
+If you want to find more information about the project and project structure check Docuumentation.pdf
